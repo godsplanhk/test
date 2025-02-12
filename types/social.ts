@@ -14,7 +14,7 @@ export type IgPostOutput = {
 }
 
 export type IgProfileInput = {
-    username:string;
+    url:string;
 }
 
 export type IgProfileOutput = {

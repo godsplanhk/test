@@ -111,10 +111,10 @@ export const ig_reel_scraper=async(req: Request, res:Response)=>{
 
 
 export const ig_profile_scraper = async(req:Request, res:Response)=>{
-    const {username} = req.body as IgProfileInput
+    const {url} = req.body as IgProfileInput
     let cookie = req.body.cookie;
     const apiKey = req.headers["x-apify-api-key"] as string;
-
+    const username = url.replace("https://instagram.com/","").replace("/","")
     if(!username || !cookie) {
         res.status(400).json({"error":"Please provide the username / cookie"})
         return
@@ -363,6 +363,7 @@ export const ig_comment_scraper = async(req:Request, res:Response)=>{
     }
 }
 
+
 export const ig_likes_scraper = async(req:Request, res:Response)=>{
     const {url, limit} = req.body as IgLikesInput
     let cookie = req.body.cookie;
@@ -525,3 +526,5 @@ export const ig_likes_scraper = async(req:Request, res:Response)=>{
         res.status(500).json({"error":"Actor run failed."})
     }
 }
+
+
