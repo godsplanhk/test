@@ -38,7 +38,7 @@ export const ig_post_scraper=async(req: Request, res:Response)=>{
         const output_data : IgPostOutput = {
             number_of_comments: result[0]?.comment_count,
             number_of_likes: result[0]?.like_count,
-            username:result[0]?.username,
+            username:result[0]?.owner.username,
             post_date:result[0]?.post_date,
             location:result[0]?.location,
             video:result[0]?.video_url,
