@@ -1,34 +1,24 @@
-export const pollRunStatus = async (
-    runId: string,
-    apiKey: string,
-    timeout = 70_000, // 70 seconds
-    interval = 3_000  // Poll every 3 seconds
-): Promise<string | null> => {
+export const pollRunStatus = async (runId: string, apiKey: string): Promise<string | null> => {
     const statusUrl = `https://api.apify.com/v2/actor-runs/${runId}?token=${apiKey}`;
-    const startTime = Date.now();
 
-    while (Date.now() - startTime < timeout) {
-        await new Promise((res) => setTimeout(res, interval));
+    while (true) {
+        await new Promise((res) => setTimeout(res, 5000));
 
         try {
             const res = await fetch(statusUrl);
             const runData = await res.json();
 
-            if (runData?.data?.status === "SUCCEEDED") {
+            if (runData.data.status === "SUCCEEDED") {
                 return runData.data.defaultDatasetId;
             }
-
-            if (["FAILED", "ABORTED"].includes(runData?.data?.status)) {
+            if (["FAILED", "ABORTED"].includes(runData.data.status)) {
                 throw new Error(`Actor run failed: ${runData.data.status}`);
             }
         } catch (error) {
-            console.error(`Error fetching run status: ${error instanceof Error ? error.message : String(error)}`);
+            throw new Error(`Error fetching run status: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
-
-    throw new Error("Polling timeout exceeded.");
 };
-
 
 export const fetchActorResults = async (datasetId: string, apiKey: string): Promise<any[]> => {
     try {
