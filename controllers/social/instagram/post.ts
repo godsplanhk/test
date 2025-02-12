@@ -3,43 +3,51 @@ import { IgPostInput, IgPostOutput } from "../../../types/social";
 import { Request, Response } from "express";
 
 export const ig_post_scraper = async (req: Request, res: Response) => {
-    const { url } = req.body as IgPostInput;
-    const apiKey = req.headers["x-apify-api-key"] as string;
+    try {
+        const { url } = req.body as IgPostInput;
+        const apiKey = req.headers["x-apify-api-key"] as string;
 
-    if (!url) {
-        res.status(400).json({ error: "URL not provided in the body" });
-        return
+        if (!url) {
+            res.status(400).json({ error: "URL not provided in the body" });
+            return
     }
 
-    const actorUrl = `https://api.apify.com/v2/acts/powerful_bachelor~instagram-post-details-scraper-ppr/runs?token=${apiKey}`;
+        const actorUrl = `https://api.apify.com/v2/acts/powerful_bachelor~instagram-post-details-scraper-ppr/runs?token=${apiKey}`;
 
-    try {
+        // Start actor and poll in parallel
         const response = await fetch(actorUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ postUrls: [url] }),
         });
 
-        const data = await response.json();
-        if (!data?.data?.id) throw new Error("Failed to start actor.");
+        let data  = await response.json();
+        data = data.data
+        if (!data?.id) throw new Error("Failed to start actor.");
 
-        const datasetId = await pollRunStatus(data.data.id, apiKey);
+        // Poll status while waiting for actor results
+        const datasetId = await pollRunStatus(data.id, apiKey);
         if (!datasetId) throw new Error("Failed to get dataset ID.");
 
+        // Fetch and process results
         const result = await fetchActorResults(datasetId, apiKey);
-        const output_data: IgPostOutput = {
-            number_of_comments: result[0]?.comment_count,
-            number_of_likes: result[0]?.like_count,
-            username: result[0]?.owner.username,
-            post_date: result[0]?.post_date,
-            location: result[0]?.location,
-            video: result[0]?.video_url,
-            engagement_rate: "",
-            number_of_played: result[0]?.video_play_count,
-        };
+        const postData = result[0];
 
-        res.status(200).json({ data: output_data });
+        if (!postData) throw new Error("No data received from actor.");
+
+        res.status(200).json({
+            data: {
+                number_of_comments: postData.comment_count ?? 0,
+                number_of_likes: postData.like_count ?? 0,
+                username: postData.owner?.username ?? "",
+                post_date: postData.post_date ?? "",
+                location: postData.location ?? "",
+                video: postData.video_url ?? "",
+                engagement_rate: "",
+                number_of_played: postData.video_play_count ?? 0,
+            },
+        });
     } catch (err) {
-        res.status(500).json({ error: "Actor run failed." });
+        res.status(500).json({ error: err || "Actor run failed." });
     }
 };

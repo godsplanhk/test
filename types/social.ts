@@ -15,6 +15,7 @@ export type IgPostOutput = {
 
 export type IgProfileInput = {
     url:string;
+    cookie:string;
 }
 
 export type IgProfileOutput = {
