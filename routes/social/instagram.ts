@@ -1,4 +1,9 @@
-import { ig_comment_scraper, ig_likes_scraper, ig_post_scraper, ig_profile_scraper, ig_reel_scraper } from "../../controllers/social/instagram";
+import { ig_reel_scraper } from "../../controllers/social/instagram/reel";
+import { ig_post_scraper } from "../../controllers/social/instagram/post";
+import { ig_profile_scraper } from "../../controllers/social/instagram/profile";
+import { ig_comment_scraper } from "../../controllers/social/instagram/comments";
+import { ig_likes_scraper } from "../../controllers/social/instagram/likes";
+import { ig_follow_scraper } from "../../controllers/social/instagram/followerFollowing";
 import express, { Router } from "express";
 
 const InstagramRouter = Router()
@@ -8,6 +13,7 @@ InstagramRouter.post("/reel", ig_reel_scraper)
 InstagramRouter.post("/profile", ig_profile_scraper)
 InstagramRouter.post("/comments", ig_comment_scraper)
 InstagramRouter.post("/likes", ig_likes_scraper)
+InstagramRouter.post("/follow", ig_follow_scraper)
 
 
 export default InstagramRouter

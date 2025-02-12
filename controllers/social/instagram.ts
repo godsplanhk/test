@@ -115,6 +115,7 @@ export const ig_profile_scraper = async(req:Request, res:Response)=>{
     let cookie = req.body.cookie;
     const apiKey = req.headers["x-apify-api-key"] as string;
     const username = url.replace("https://instagram.com/","").replace("/","")
+
     if(!username || !cookie) {
         res.status(400).json({"error":"Please provide the username / cookie"})
         return
@@ -181,7 +182,7 @@ export const ig_profile_scraper = async(req:Request, res:Response)=>{
         const last_post_date = await get_last_post_date()
 
         const outputResult:IgProfileOutput = {
-            username:result[0].input,
+            username: url.replace("https://instagram.com/","").replace("/",""),
             location:`${result[0].address_street} ${result[0].city_name}`,
             phone:result[0].contact_phone_number || result[0].public_phone_number,
             email:result[0].public_email,

@@ -62,3 +62,9 @@ export type IgLikesOutput = {
     phone:string | BigInt,
     engagement_rate:string
 }
+
+export type IgFollowInput = {
+    url:string;
+    limit:number;
+    type:"followers" | "following"
+}
