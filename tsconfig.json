@@ -7,10 +7,6 @@
       "strict": true,
       "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true,
-      "baseUrl": "./", 
-      "paths": {
-      "@/*": ["./*"]  // This maps @/ to the src folder
-      }
     }
   }
   

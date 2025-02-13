@@ -32,7 +32,8 @@ export type IgProfileOutput = {
 
 export type IgCommentsInput = {
     url:string;
-    limit:number
+    limit:number;
+    cookie:string;
 }
 
 export type IgCommentsOutput = {

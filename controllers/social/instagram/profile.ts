@@ -66,7 +66,7 @@ export const ig_profile_scraper = async (req: Request, res: Response) => {
         const result = profileResults[0];
 
         const outputResult: IgProfileOutput = {
-            username,
+            username:username.replace("https:/www.instagram.com/","").replace("/",""),
             location: `${result.address_street || ""} ${result.city_name || ""}`.trim(),
             phone: result.contact_phone_number || result.public_phone_number || "",
             email: result.public_email || "",
