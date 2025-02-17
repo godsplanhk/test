@@ -3,19 +3,19 @@ import { Request, Response } from 'express';
 
 const API_BASE_URL = 'https://api.hikerapi.com';
 
-export async function ig_profile_scraper(req: Request, res: Response) {
-  const { url } = req.body;
+export async function ig_followers_scraper(req: Request, res: Response) {
+  const { id, end_cursor } = req.body;
   const apiKey = req.headers['x-api-key'] as string;
 
-  if (!apiKey || !url) {
+  if (!apiKey || !id) {
     res.status(400).json({ error: 'API key and hashtag are required.' });
     return 
   }
 
   try {
     // Fetch hashtag details
-    const response = await axios.get(`${API_BASE_URL}/v1/user/by/url`, {
-      params: { url },
+    const response = await axios.get(`${API_BASE_URL}/gql/user/followers/chunk`, {
+      params: { user_id:id, end_cursor },
       headers: {
         'x-access-key': `${apiKey}`,
         'Content-Type': 'application/json',

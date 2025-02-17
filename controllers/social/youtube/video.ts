@@ -1,44 +1,34 @@
-import { fetchActorResults, pollRunStatus } from "../../../utils/actor";
-import { IgPostInput, IgPostOutput } from "../../../types/social";
+import axios from 'axios';
 import { Request, Response } from "express";
 
 export const yt_video_scraper = async (req: Request, res: Response) => {
-    try {
-        const { url } = req.body as IgPostInput;
-        const apiKey = req.headers["x-apify-api-key"] as string;
+    const { video } = req.body; // Get video ID from request
+    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
-        if (!url) {
-            res.status(400).json({ error: "URL not provided in the body" });
-            return
+    if (!video) {
+        res.status(400).json({ error: "Please provide a video ID" });
+        return 
+    }
+
+    const options = {
+        method: 'GET',
+        url: 'https://youtube138.p.rapidapi.com/video/details/',
+        params: {
+            id: video,
+        },
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': 'youtube138.p.rapidapi.com'
         }
+    };
 
-        const actorUrl = `https://api.apify.com/v2/acts/streamers~youtube-scraper/runs?token=${apiKey}`;
-
-        // Start actor and poll in parallel
-        const response = await fetch(actorUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ startUrls:[{url}], maxResults:1 }),
-        });
-
-        console.log(response)
-        let data  = await response.json();
-        data = data.data
-        if (!data?.id) throw new Error("Failed to start actor.");
-
-        // Poll status while waiting for actor results
-        const datasetId = await pollRunStatus(data.id, apiKey);
-        if (!datasetId) throw new Error("Failed to get dataset ID.");
-
-        // Fetch and process results
-        const result = await fetchActorResults(datasetId, apiKey);
-
-        if (!result) throw new Error("No data received from actor.");
-
-        res.status(200).json({data:result[0]})
-        
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ error: err || "Actor run failed." });
+    try {
+        const response = await axios.request(options);
+        res.status(200).json(response.data);
+        return 
+    } catch (error: any) {
+        console.error("Error fetching video details:", error);
+        res.status(error?.response?.status || 500).json({ error: error.message });
+        return 
     }
 };

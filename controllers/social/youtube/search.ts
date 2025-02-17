@@ -1,75 +1,36 @@
-import { fetchActorResults, pollRunStatus } from "../../../utils/actor";
-import { IgPostInput, IgPostOutput } from "../../../types/social";
+import axios from 'axios';
 import { Request, Response } from "express";
 
 export const yt_search_scraper = async (req: Request, res: Response) => {
+    const { query, limit } = req.body; // Get search query from request
+    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+
+    if (!query) {
+        res.status(400).json({ error: "Please provide a search query" });
+        return 
+    }
+
+    const options = {
+        method: 'GET',
+        url: 'https://youtube138.p.rapidapi.com/search/',
+        params: {
+            q: query,
+            hl: 'en',
+            gl: 'US'
+        },
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': 'youtube138.p.rapidapi.com'
+        }
+    };
+
     try {
-        const { query, limit } = req.body;
-        const apiKey = req.headers["x-apify-api-key"] as string;
-
-        if (!query) {
-            res.status(400).json({ error: "URL not provided in the body" });
-            return
-        }
-
-        const actorUrl = `https://api.apify.com/v2/acts/streamers~youtube-scraper/runs?token=${apiKey}`;
-
-        // Start actor and poll in parallel
-        const response = await fetch(actorUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ searchQueries:[query], maxResults:limit || 1 }),
-        });
-
-        let data  = await response.json();
-        console.log(data)
-        data = data.data
-        if (!data?.id) throw new Error("Failed to start actor.");
-
-        // Poll status while waiting for actor results
-        const datasetId = await pollRunStatus(data.id, apiKey);
-        if (!datasetId) throw new Error("Failed to get dataset ID.");
-
-        // Fetch and process results
-        const result = await fetchActorResults(datasetId, apiKey);
-
-        if (!result) throw new Error("No data received from actor.");
-        console.log(result)
-        const usernames = result.map(i=>{return {url:i.channelUrl + "/about"} })
-        console.log(usernames)
-        const scrape_profile=async()=>{
-            const actorUrl = `https://api.apify.com/v2/acts/streamers~youtube-scraper/runs?token=${apiKey}`;
-
-            // Start actor and poll in parallel
-            const response = await fetch(actorUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ startUrls:usernames}),
-            });
-            let data  = await response.json();
-            console.log(data)
-            data = data.data
-            if (!data?.id) throw new Error("Failed to start actor.");
-
-            // Poll status while waiting for actor results
-            const datasetId = await pollRunStatus(data.id, apiKey);
-            if (!datasetId) throw new Error("Failed to get dataset ID.");
-
-            // Fetch and process results
-            const profileResults = await fetchActorResults(datasetId, apiKey);
-            return profileResults
-        }
-
-        const profiles = await scrape_profile()
-        const finalRes = []
-        for(var i=0;i<profiles.length;i++){
-            finalRes[i] = {...profiles[i], ...result[i]}
-        }
-
-        res.status(200).json({data:finalRes})
-        
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ error: err || "Actor run failed." });
+        const response = await axios.request(options);
+        res.status(200).json(response.data.contents.slice(0, limit || 2));
+        return 
+    } catch (error: any) {
+        console.error("Error fetching YouTube search results:", error);
+        res.status(error?.response?.status || 500).json({ error: error.message });
+        return 
     }
 };

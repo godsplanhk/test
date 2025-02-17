@@ -1,44 +1,29 @@
-import { fetchActorResults, pollRunStatus } from "../../../utils/actor";
-import { IgPostInput, IgPostOutput } from "../../../types/social";
-import { Request, Response } from "express";
+import axios from 'axios';
+import { Request, Response } from 'express';
 
-export const facebook_post_scraper = async (req: Request, res: Response) => {
-    try {
-        const { url } = req.body as IgPostInput;
-        const apiKey = req.headers["x-apify-api-key"] as string;
+export const facebook_post_scraper = async (req:Request, res:Response) => {
+    const postId = req.body.post_id;
+    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
-        if (!url) {
-            res.status(400).json({ error: "URL not provided in the body" });
-            return
+    if (!postId || !apiKey) {
+        res.status(400).json({ error: 'post_id query parameter is required' });
+        return 
     }
 
-        const actorUrl = `https://api.apify.com/v2/acts/pratikdani~facebook-post-scraper/runs?token=${apiKey}`;
+    const options = {
+        method: 'GET',
+        url: 'https://facebook-scraper3.p.rapidapi.com/post',
+        params: { post_id: postId },
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
+        }
+    };
 
-        // Start actor and poll in parallel
-        const response = await fetch(actorUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({url}),
-        });
-
-        let data  = await response.json();
-        data = data.data
-        if (!data?.id) throw new Error("Failed to start actor.");
-
-        // Poll status while waiting for actor results
-        const datasetId = await pollRunStatus(data.id, apiKey);
-        if (!datasetId) throw new Error("Failed to get dataset ID.");
-
-        // Fetch and process results
-        const result:any = await fetchActorResults(datasetId, apiKey);
-
-        if (!result) throw new Error("No data received from actor.");
-        res.status(200).json({
-            data: result[0] || []
-               
-        });
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ error: err || "Actor run failed." });
+    try {
+        const response = await axios.request(options);
+        res.status(200).json(response.data);
+    } catch (error:any) {
+        res.status(error.status || 500).json({ error: error.message });
     }
 };

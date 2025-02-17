@@ -1,53 +1,52 @@
-import { fetchActorResults, pollRunStatus } from "../../../utils/actor";
-import { IgPostInput, IgPostOutput } from "../../../types/social";
-import { Request, Response } from "express";
+import axios from 'axios';
+import { Request, Response } from 'express';
 
-export const ig_post_scraper = async (req: Request, res: Response) => {
-    try {
-        const { url } = req.body as IgPostInput;
-        const apiKey = req.headers["x-apify-api-key"] as string;
+const API_BASE_URL = 'https://api.hikerapi.com';
 
-        if (!url) {
-            res.status(400).json({ error: "URL not provided in the body" });
-            return
+export async function ig_post_scraper(req: Request, res: Response) {
+  const { url } = req.body;
+  const apiKey = req.headers['x-api-key'] as string;
+
+  if (!apiKey || !url) {
+    res.status(400).json({ error: 'API key and hashtag are required.' });
+    return 
+  }
+
+  try {
+    // Fetch hashtag details
+    const response = await axios.get(`${API_BASE_URL}/v2/media/info/by/url`, {
+      params: { url },
+      headers: {
+        'x-access-key': `${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+
+    // Check if the hashtag was found
+    if (!response.data) {
+    res.status(404).json({ error: 'Hashtag not found.' });
+      return 
     }
 
-        const actorUrl = `https://api.apify.com/v2/acts/powerful_bachelor~instagram-post-details-scraper-ppr/runs?token=${apiKey}`;
-
-        // Start actor and poll in parallel
-        const response = await fetch(actorUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ postUrls: [url] }),
-        });
-
-        let data  = await response.json();
-        data = data.data
-        if (!data?.id) throw new Error("Failed to start actor.");
-
-        // Poll status while waiting for actor results
-        const datasetId = await pollRunStatus(data.id, apiKey);
-        if (!datasetId) throw new Error("Failed to get dataset ID.");
-
-        // Fetch and process results
-        const result = await fetchActorResults(datasetId, apiKey);
-        const postData = result[0];
-
-        if (!postData) throw new Error("No data received from actor.");
-
-        res.status(200).json({
-            data: {
-                number_of_comments: postData.comment_count ?? 0,
-                number_of_likes: postData.like_count ?? 0,
-                username: postData.owner?.username ?? "",
-                post_date: postData.post_date ?? "",
-                location: postData.location ?? "",
-                video: postData.video_url ?? "",
-                engagement_rate: "",
-                number_of_played: postData.video_play_count ?? 0,
-            },
-        });
-    } catch (err) {
-        res.status(500).json({ error: err || "Actor run failed." });
+    // Send the hashtag data as the response
+    res.status(200).json({ data: response.data.media_or_ad });
+  } catch (error) {
+    // Handle errors
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        // Server responded with a status other than 2xx
+        res.status(error.response.status).json({ error: error.response.data });
+      } else if (error.request) {
+        // Request was made but no response received
+        res.status(500).json({ error: 'No response received from the API.' });
+      } else {
+        // Something happened in setting up the request
+        res.status(500).json({ error: 'Error setting up the request.' });
+      }
+    } else {
+      // Non-Axios error
+      res.status(500).json({ error: 'An unexpected error occurred.' });
     }
-};
+  }
+}

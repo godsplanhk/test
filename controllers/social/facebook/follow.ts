@@ -1,9 +1,9 @@
 import { ApifyClient } from 'apify-client';
 import { Request, Response } from 'express';
 
-export const facebook_likes_scraper = async (req: Request, res: Response) => {
+export const facebook_follow_scraper = async (req: Request, res: Response) => {
     
-    const {url,limit} = req.body;
+    const {url,limit,type} = req.body;
     const apiKey = req.headers['x-api-key']
     
     if (!url || !apiKey) {
@@ -16,11 +16,12 @@ export const facebook_likes_scraper = async (req: Request, res: Response) => {
 
     const input = {
         "startUrls": [{ "url": url }],
-        "resultsLimit": limit || 10
+        "resultsLimit": limit || 5,
+        "followType": type
     };
 
     try {
-        const run = await client.actor("apify/facebook-likes-scraper").call(input);
+        const run = await client.actor("apify/facebook-followers-following-scraper").call(input);
         const { items } = await client.dataset(run.defaultDatasetId).listItems();
         res.status(200).json({ data: items });
     } catch (error: any) {

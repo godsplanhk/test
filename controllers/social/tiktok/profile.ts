@@ -1,52 +1,32 @@
-import { IgProfileInput, IgProfileOutput } from "../../../types/social";
-import { fetchActorResults, pollRunStatus } from "../../../utils/actor";
+import axios from 'axios';
 import { Request, Response } from "express";
 
 export const tiktok_profile_scraper = async (req: Request, res: Response) => {
-    try {
-        const { username } = req.body;
-        const apiKey = req.headers["x-apify-api-key"] as string;
+    const { username:uniqueId } = req.body; // Get TikTok username from request
+    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
-        if (!username) {
-            res.status(400).json({ error: "Please provide the username" });
-            return 
+    if (!uniqueId) {
+        res.status(400).json({ error: "Please provide a TikTok username (uniqueId)" });
+        return 
+    }
+
+    const options = {
+        method: 'GET',
+        url: 'https://tiktok-api23.p.rapidapi.com/api/user/info',
+        params: { uniqueId },
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': 'tiktok-api23.p.rapidapi.com'
         }
+    };
 
-        const payload = {
-            "profiles": [username],
-            "profileSorting": "latest"
-        };
-
-        console.log(payload)
-
-        const actorUrl = `https://api.apify.com/v2/acts/clockworks~tiktok-profile-scraper/runs?token=${apiKey}`;
-
-        // Start profile scraper actor
-        const profileResponse = await fetch(actorUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        });
-
-        const profileData = await profileResponse.json();
-        if (!profileData?.data?.id) throw new Error("Failed to start profile scraper actor.");
-
-        // Poll status and fetch results concurrently
-        const datasetIdPromise = pollRunStatus(profileData.data.id, apiKey);
-        const datasetId = await datasetIdPromise;
-        if (!datasetId) throw new Error("Failed to get dataset ID.");
-
-        const profileResults = await fetchActorResults(datasetId, apiKey);
-
-        // Run both fetch calls in parallel
-
-        if (!profileResults) throw new Error("No profile data found.");
-
-
-
-        res.status(200).json({ data: profileResults });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: error || "Actor run failed." });
+    try {
+        const response = await axios.request(options);
+        res.status(200).json({...response.data.userInfo.user, ...response.data.userInfo.stats});
+        return
+    } catch (error: any) {
+        console.error("Error fetching TikTok user info:", error);
+        res.status(error?.response?.status || 500).json({ error: error.message });
+        return
     }
 };
