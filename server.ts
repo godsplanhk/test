@@ -8,12 +8,14 @@ import YouTubeRouter from "./routes/social/youtube";
 import TikTokRouter from "./routes/social/tiktok";
 import XRouter from "./routes/social/x";
 import dotenv from 'dotenv'
+import compression from 'compression'
 
 dotenv.config()
 
 const app = express();
 
 app.use(cors())
+app.use(compression())
 app.use(cookieParser())
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
