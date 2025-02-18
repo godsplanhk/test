@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 const API_BASE_URL = 'https://api.hikerapi.com';
 
 export async function ig_comment_scraper(req: Request, res: Response) {
-  const { id, page_id } = req.body;
+  const { id, page_id, limit } = req.body;
   const apiKey = req.headers['x-api-key'] as string;
 
   if (!apiKey || !id) {
@@ -30,7 +30,7 @@ export async function ig_comment_scraper(req: Request, res: Response) {
     }
 
     // Send the hashtag data as the response
-    res.status(200).json({ data: response.data.response });
+    res.status(200).json({ data: response.data.response.comments.slice(0,limit||20) });
   } catch (error) {
     // Handle errors
     if (axios.isAxiosError(error)) {

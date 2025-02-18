@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 const API_BASE_URL = 'https://api.hikerapi.com';
 
 export async function ig_likes_scraper(req: Request, res: Response) {
-  const { id } = req.body;
+  const { id, limit } = req.body;
   const apiKey = req.headers['x-api-key'] as string;
 
   if (!apiKey || !id) {
@@ -30,7 +30,7 @@ export async function ig_likes_scraper(req: Request, res: Response) {
     }
 
     // Send the hashtag data as the response
-    res.status(200).json({ data: response.data.users });
+    res.status(200).json({ data: response.data.users.slice(0, limit || 5 ) });
   } catch (error) {
     // Handle errors
     if (axios.isAxiosError(error)) {
