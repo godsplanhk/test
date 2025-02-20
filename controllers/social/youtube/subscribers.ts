@@ -17,7 +17,8 @@ export const yt_subscriptions = async (req: Request, res: Response) => {
     try {
         const response = await youtube.subscriptions.list({
             part: ['subscriberSnippet'],
-            channelId: channelId
+            channelId: channelId,
+            
         });
         res.status(200).json(response.data.items);
     } catch (error: any) {

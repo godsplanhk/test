@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { Request, Response } from "express";
-import { fetchActorResults, pollRunStatus } from "../../../utils/actor";
-import { IgCommentsInput } from "../../../types/social";
 
 export const facebook_comment_scraper = async (req: Request, res: Response) => {
     const { post, limit } = req.body;
