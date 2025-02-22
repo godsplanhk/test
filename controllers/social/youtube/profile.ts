@@ -14,7 +14,7 @@ export const yt_channel_details = async (req: Request, res: Response) => {
         method: 'GET',
         url: 'https://youtube138.p.rapidapi.com/channel/details/',
         params: {
-            id: channel,
+            id: channel.includes("youtube.com")?channel:`https://www.youtube.com/@${channel}`,
         },
         headers: {
             'x-rapidapi-key': apiKey,

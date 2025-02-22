@@ -10,6 +10,7 @@ import { getCompanyDetails } from "../../controllers/job/linkedin/companyDetails
 import { linkedinSalesNavigator } from "../../controllers/job/linkedin/salesNavigator";
 import { salesNavigatorPeople } from "../../controllers/job/linkedin/salesNavigator/peopleLeads";
 import { salesNavigatorCompany } from "../../controllers/job/linkedin/salesNavigator/companyLeads";
+import { getCompanyByDomain } from "../../controllers/job/linkedin/companyDomain";
 
 const LinkedinRouter = Router()
 
@@ -21,6 +22,7 @@ LinkedinRouter.post("/postedJobs", getPostedJobs)
 LinkedinRouter.post("/email", getLinkedInEmail)
 LinkedinRouter.post("/job", getJobDetails)
 LinkedinRouter.post("/company", getCompanyDetails)
+LinkedinRouter.post("/company-domain", getCompanyByDomain)
 LinkedinRouter.post("/salesNavigator/people", salesNavigatorPeople)
 LinkedinRouter.post("/salesNavigator/company", salesNavigatorCompany)
 

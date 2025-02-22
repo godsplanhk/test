@@ -7,12 +7,14 @@ import TikTokRouter from "./routes/social/tiktok";
 import XRouter from "./routes/social/x";
 import dotenv from 'dotenv'
 import LinkedinRouter from "./routes/job/linkedin";
-import { searchDiceJobs } from "./controllers/job/dice";
 import GlassdoorRouer from "./routes/job/glassdoor";
 import { scrapeNaukriJobs } from "./controllers/job/naukri";
 import { scrapeIndeedJobs } from "./controllers/job/indeed";
 import ApolloRouter from "./routes/job/apollo";
-import MapsRouter from "./routes/googleMaps";
+import MapsRouter from "./routes/maps";
+import CrunchbaseRouter from "./routes/job/crunchbase";
+import { searchInfluencers } from "./controllers/social/influencer";
+import EnrichementRouter from "./routes/enrichement";
 
 dotenv.config()
 
@@ -29,13 +31,17 @@ app.use("/social/tiktok", TikTokRouter)
 app.use("/social/x", XRouter)
 
 app.use("/jobs/linkedin", LinkedinRouter)
-app.use("/jobs/indeed", scrapeIndeedJobs)
-app.use("/jobs/dice", searchDiceJobs)
 app.use("/jobs/glassdoor", GlassdoorRouer)
-app.post("/jobs/naukri", scrapeNaukriJobs)
 app.use("/jobs/apollo", ApolloRouter)
+app.use("/jobs/crunchbase", CrunchbaseRouter)
+
+app.use("/enrichement", EnrichementRouter)
+
 app.use("/maps", MapsRouter)
 
+app.post("/jobs/indeed", scrapeIndeedJobs)
+app.post("/jobs/naukri", scrapeNaukriJobs)
+app.post("/influencerSearch", searchInfluencers)
 
 app.listen(process.env.PORT,()=>{
 })
