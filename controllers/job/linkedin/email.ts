@@ -24,7 +24,7 @@ export const getLinkedInEmail = async (req: Request, res: Response) => {
 
   try {
     const response = await axios.request(options);
-    res.status(200).json({email:response.data.data.emails});
+    res.status(200).json({email:response.data});
   } catch (error: any) {
     res.status(error.response?.status || 500).json({ error: error.message });
   }

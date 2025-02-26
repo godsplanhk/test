@@ -7,10 +7,12 @@ import { ig_hashtag_scraper } from "../../controllers/social/instagram/hashtag";
 import { ig_following_scraper } from "../../controllers/social/instagram/following";
 import { Router } from "express";
 import { ig_id_generator } from "../../controllers/social/instagram/id";
+import { ig_posts_scraper } from "../../controllers/social/instagram/posts";
 
 const InstagramRouter = Router()
 
 InstagramRouter.post("/post", ig_post_scraper)
+InstagramRouter.post("/posts", ig_posts_scraper)
 InstagramRouter.post("/id", ig_id_generator)
 InstagramRouter.post("/profile", ig_profile_scraper)
 InstagramRouter.post("/comments", ig_comment_scraper)

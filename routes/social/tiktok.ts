@@ -6,6 +6,7 @@ import { tiktok_video_scraper } from "../../controllers/social/tiktok/video";
 import { tiktok_email_scraper } from "../../controllers/social/tiktok/email";
 import { tiktok_followers_scraper } from "../../controllers/social/tiktok/followers";
 import { tiktok_following_scraper } from "../../controllers/social/tiktok/following";
+import { tiktok_videos_scraper } from "../../controllers/social/tiktok/videos";
 
 const TikTokRouter = Router()
 
@@ -15,6 +16,7 @@ TikTokRouter.post("/profile", tiktok_profile_scraper)
 TikTokRouter.post("/comments", tiktok_comments_scraper)
 TikTokRouter.post("/hashtag", tiktok_hashtag_scraper)
 TikTokRouter.post("/video", tiktok_video_scraper)
+TikTokRouter.post("/videos", tiktok_videos_scraper)
 TikTokRouter.post("/email", tiktok_email_scraper)
 TikTokRouter.post("/followers", tiktok_followers_scraper)
 TikTokRouter.post("/following", tiktok_following_scraper)

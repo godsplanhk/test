@@ -15,6 +15,7 @@ import MapsRouter from "./routes/maps";
 import CrunchbaseRouter from "./routes/job/crunchbase";
 import { searchInfluencers } from "./controllers/social/influencer";
 import EnrichementRouter from "./routes/enrichement";
+import IndeedRouter from "./routes/job/indeed";
 
 dotenv.config()
 
@@ -39,9 +40,9 @@ app.use("/enrichement", EnrichementRouter)
 
 app.use("/maps", MapsRouter)
 
-app.post("/jobs/indeed", scrapeIndeedJobs)
+app.use("/jobs/indeed", IndeedRouter)
 app.post("/jobs/naukri", scrapeNaukriJobs)
 app.post("/influencerSearch", searchInfluencers)
 
-app.listen(process.env.PORT,()=>{
+app.listen(5000,()=>{
 })

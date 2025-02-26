@@ -7,10 +7,12 @@ import { facebook_post_scraper } from "../../controllers/social/facebook/post";
 import { facebook_page_details } from "../../controllers/social/facebook/pages";
 import { facebook_search } from "../../controllers/social/facebook/search";
 import { facebook_group_details } from "../../controllers/social/facebook/group";
+import { facebook_posts_scraper } from "../../controllers/social/facebook/posts";
 
 const FacebookRouter = Router()
 
 FacebookRouter.post("/post", facebook_post_scraper)
+FacebookRouter.post("/posts", facebook_posts_scraper)
 FacebookRouter.post("/page", facebook_page_details)
 FacebookRouter.post("/search", facebook_search)
 FacebookRouter.post("/group", facebook_group_details)
