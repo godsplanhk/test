@@ -6,7 +6,7 @@ const DatabaseRouter = Router();
 
 DatabaseRouter.post("/log/social-media", async (req: Request, res: Response) => {
     try {
-        const newTask = await prisma.socialMediaLog.create({
+        const newTask = await prisma.social_media_logs.create({
             data: req.body
         });
 

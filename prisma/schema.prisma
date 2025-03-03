@@ -538,3 +538,14 @@ model tt_share {
   task      task[]
   accounts  accounts @relation(fields: [account], references: [username], onDelete: NoAction, onUpdate: NoAction)
 }
+model social_media_logs {
+  id               Int                      @id @default(autoincrement())
+  task_title       String?
+  task_description String?
+  last_modified    DateTime?                @db.Timestamp(6)
+  status           String?                  @db.VarChar(20)
+  time_left        Int?
+  memory_used      String?
+  metadata         Json?
+}
+
