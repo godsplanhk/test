@@ -9,7 +9,7 @@ export const salesNavigatorCompany = async (req:Request, res:Response) => {
 
         // Validate input
         if (!url) {
-            res.status(400).json({ error: "Missing required fields: url, page, account_number" });
+            res.status(400).json({ error: "Missing required fields: url" });
             return 
         }
         if (!apiKey) {

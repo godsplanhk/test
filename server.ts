@@ -16,6 +16,7 @@ import CrunchbaseRouter from "./routes/job/crunchbase";
 import { searchInfluencers } from "./controllers/social/influencer";
 import EnrichementRouter from "./routes/enrichement";
 import IndeedRouter from "./routes/job/indeed";
+import DatabaseRouter from "./routes/db/social_media_log";
 
 dotenv.config()
 
@@ -44,5 +45,7 @@ app.use("/jobs/indeed", IndeedRouter)
 app.post("/jobs/naukri", scrapeNaukriJobs)
 app.post("/influencerSearch", searchInfluencers)
 
-app.listen(5000,()=>{
+app.use("/db", DatabaseRouter)
+
+app.listen(5100,()=>{
 })
