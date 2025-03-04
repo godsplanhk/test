@@ -11,6 +11,8 @@ import { linkedinSalesNavigator } from "../../controllers/job/linkedin/salesNavi
 import { salesNavigatorPeople } from "../../controllers/job/linkedin/salesNavigator/peopleLeads";
 import { salesNavigatorCompany } from "../../controllers/job/linkedin/salesNavigator/companyLeads";
 import { getCompanyByDomain } from "../../controllers/job/linkedin/companyDomain";
+import { getLinkedInProfile } from "../../controllers/job/linkedin/profile";
+import { searchSalesNavigator } from "../../controllers/job/linkedin/salesNavigator/search";
 
 const LinkedinRouter = Router()
 
@@ -25,6 +27,8 @@ LinkedinRouter.post("/company", getCompanyDetails)
 LinkedinRouter.post("/company-domain", getCompanyByDomain)
 LinkedinRouter.post("/salesNavigator/people", salesNavigatorPeople)
 LinkedinRouter.post("/salesNavigator/company", salesNavigatorCompany)
+LinkedinRouter.post("/salesNavigator/search", searchSalesNavigator)
+LinkedinRouter.post("/profile", getLinkedInProfile)
 
 
 export default LinkedinRouter
