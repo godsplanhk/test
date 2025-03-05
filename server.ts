@@ -48,4 +48,5 @@ app.post("/influencerSearch", searchInfluencers)
 app.use("/db", DatabaseRouter)
 
 app.listen(5300,()=>{
+    console.log("http://localhost:5300")
 })
