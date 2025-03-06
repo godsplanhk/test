@@ -9,41 +9,20 @@ const pool = new Pool({
 const DatabaseRouter = Router();
 
 DatabaseRouter.post("/social-media/logs", async (req: Request, res: Response) => {
-    const { user_id, title, subtitle, date, status, time_left, scraper_type, results, hidden } = req.body;
+    const { user_id, title, task_id, subtitle, date, status, time_left, scraper_type, results, hidden } = req.body;
 
     // Validate required fields
     if (!user_id || !title || !date || !scraper_type) {
-        res.status(400).json({ message: "user_id, title, date and scraper_type are required fields." });
-        return 
+        res.status(400).json({ message: "user_id, title, date, and scraper_type are required fields." });
+        return;
     }
 
-    // Validate UUIDs
+    // Validate UUID format
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(user_id)) {
         res.status(400).json({ message: "Invalid user_id format. Must be a valid UUID." });
-        return 
+        return;
     }
-
-
-    // Generate a unique task ID
-    const task_id = uuidv4();
-
-    // Define the SQL INSERT query
-    const query = `
-        INSERT INTO social_media_logs (
-            id,
-            user_id,
-            title,
-            subtitle,
-            date,
-            status,
-            time_left,
-            scraper_type,
-            results,
-            hidden
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-        RETURNING *;
-    `;
 
     // Convert `results` to JSONB if provided
     let resultsJson = null;
@@ -52,35 +31,78 @@ DatabaseRouter.post("/social-media/logs", async (req: Request, res: Response) =>
             resultsJson = JSON.stringify(results);
         } catch (error) {
             res.status(400).json({ message: "Invalid results format. Must be a valid JSON object/array." });
-            return
+            return;
         }
     }
 
-    // Parameters for the query
-    const values = [
-        task_id,
-        user_id,
-        title,
-        subtitle || null,
-        date,
-        status || null,
-        time_left || null,
-        scraper_type,
-        resultsJson,
-        hidden ?? false
-    ];
+    // Generate a new task_id if not provided
+    const newTaskId = task_id || uuidv4();
 
     try {
-        // Execute the query
-        const result = await pool.query(query, values);
+        if (task_id) {
+            // Check if the record with same user_id and task_id exists
+            const checkQuery = `
+                SELECT * FROM social_media_logs WHERE user_id = $1 AND id = $2;
+            `;
+            const checkResult = await pool.query(checkQuery, [user_id, task_id]);
 
-        // Return the inserted task
-        res.status(201).json({success:true, message: "Scraping task added successfully", task: result.rows[0] });
+            if (checkResult.rows.length > 0) {
+                // Update the existing record
+                const updateQuery = `
+                    UPDATE social_media_logs
+                    SET title = $1, subtitle = $2, date = $3, status = $4, time_left = $5, 
+                        scraper_type = $6, results = $7, hidden = $8
+                    WHERE user_id = $9 AND id = $10
+                    RETURNING *;
+                `;
+                const updateValues = [
+                    title,
+                    subtitle || null,
+                    date,
+                    status || null,
+                    time_left || null,
+                    scraper_type,
+                    resultsJson,
+                    hidden ?? false,
+                    user_id,
+                    task_id
+                ];
+                const updateResult = await pool.query(updateQuery, updateValues);
+                res.status(200).json({ success: true, message: "Scraping task updated successfully", task: updateResult.rows[0] });
+                return 
+            }
+        }
+
+        // Insert a new record if no matching task_id is found
+        const insertQuery = `
+            INSERT INTO social_media_logs (
+                id, user_id, title, subtitle, date, status, time_left, scraper_type, results, hidden
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            RETURNING *;
+        `;
+        const insertValues = [
+            newTaskId,
+            user_id,
+            title,
+            subtitle || null,
+            date,
+            status || null,
+            time_left || null,
+            scraper_type,
+            resultsJson,
+            hidden ?? false
+        ];
+        const insertResult = await pool.query(insertQuery, insertValues);
+
+        res.status(201).json({ success: true, message: "Scraping task added successfully", task: insertResult.rows[0] });
+
     } catch (error: any) {
-        console.error("Error adding scraping task:", error);
-        res.status(500).json({ message: "Error adding scraping task", error: error.message });
+        console.error("Error adding/updating scraping task:", error);
+        res.status(500).json({ message: "Error processing scraping task", error: error.message });
     }
 });
+
+
 
 DatabaseRouter.get("/social-media/logs/:user_id", async (req: Request, res: Response) => {
     const { user_id } = req.params;
