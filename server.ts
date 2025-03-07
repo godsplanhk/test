@@ -6,11 +6,10 @@ import YouTubeRouter from "./routes/social/youtube";
 import TikTokRouter from "./routes/social/tiktok";
 import XRouter from "./routes/social/x";
 import dotenv from 'dotenv'
-import LinkedinRouter from "./routes/job/linkedin";
+import LinkedinRouter from "./routes/job/linkedin.routes";
 import GlassdoorRouer from "./routes/job/glassdoor";
 import { scrapeNaukriJobs } from "./controllers/job/naukri";
-import { scrapeIndeedJobs } from "./controllers/job/indeed";
-import ApolloRouter from "./routes/job/apollo";
+import ApolloRouter from "./routes/job/apollo.routes";
 import MapsRouter from "./routes/maps";
 import CrunchbaseRouter from "./routes/job/crunchbase";
 import { searchInfluencers } from "./controllers/social/influencer";

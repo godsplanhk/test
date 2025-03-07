@@ -29,8 +29,22 @@ export async function ig_posts_scraper(req: Request, res: Response) {
       return 
     }
 
+    const data = response.data.response.items.map((item:any) => {
+      try {
+        console.log(item.caption.text)
+        const hashtags = item.caption.text.match(/#\w+/g).map((tag:string) => tag.substring(1));
+        console.log(hashtags)
+        return {
+          hashtags,
+          ...item
+        }
+      }
+      catch (error) {
+        return item;
+      }
+    })
     // Send the hashtag data as the response
-    res.status(200).json({ data: response.data });
+    res.status(200).json({ data });
   } catch (error) {
     // Handle errors
     if (axios.isAxiosError(error)) {
@@ -46,6 +60,7 @@ export async function ig_posts_scraper(req: Request, res: Response) {
       }
     } else {
       // Non-Axios error
+      console.log(error)
       res.status(500).json({ error: 'An unexpected error occurred.' });
     }
   }

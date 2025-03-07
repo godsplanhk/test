@@ -30,7 +30,8 @@ export async function ig_post_scraper(req: Request, res: Response) {
     }
 
     // Send the hashtag data as the response
-    res.status(200).json({ data: response.data.media_or_ad });
+    const hashtags = response.data.media_or_ad.caption.text.match(/#\w+/g).map((tag:string) => tag.substring(1));
+    res.status(200).json({ data: {hashtags,...response.data.media_or_ad} });
   } catch (error) {
     // Handle errors
     if (axios.isAxiosError(error)) {

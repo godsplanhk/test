@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { crunchbaseOrganizationDetails } from "../../controllers/job/crunchbase/search";
+import { crunchbaseOrganizationDetails } from "../../controllers/job/crunchbase/crunchbase.controller";
 
 const CrunchbaseRouter = Router()
 
 
-CrunchbaseRouter.post("/search", crunchbaseOrganizationDetails)
+CrunchbaseRouter.post("/company-details", crunchbaseOrganizationDetails)
+
 
 export default CrunchbaseRouter

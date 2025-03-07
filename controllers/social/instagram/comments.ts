@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
+import dayjs from 'dayjs'; // Install via: npm install dayjs
 
 const API_BASE_URL = 'https://api.hikerapi.com';
 
@@ -9,7 +10,7 @@ export async function ig_comment_scraper(req: Request, res: Response) {
 
   if (!apiKey || !id) {
     res.status(400).json({ error: 'API key and hashtag are required.' });
-    return 
+    return;
   }
 
   try {
@@ -22,30 +23,38 @@ export async function ig_comment_scraper(req: Request, res: Response) {
       },
     });
 
-
-    // Check if the hashtag was found
+    // Check if response data exists
     if (!response.data.response) {
-    res.status(404).json({ error: 'Hashtag not found.' });
-      return 
+      res.status(404).json({ error: 'Hashtag not found.' });
+      return;
     }
 
-    // Send the hashtag data as the response
-    res.status(200).json({ data: response.data.response.comments.slice(0,limit||20) });
+    // Extract and process comments
+    let comments = response.data.response.comments.slice(0, limit || 20);
+
+    // Transform comments by renaming and formatting `created_at`
+    comments = comments.map((comment: any) => {
+      if (comment.created_at_utc) {
+        return {
+          ...comment,
+          commented_on: dayjs(comment.created_at_utc).format('DD-MM-YYYY'),
+        };
+      }
+      return comment;
+    });
+
+    // Send the formatted response
+    res.status(200).json({ data: comments });
   } catch (error) {
-    // Handle errors
     if (axios.isAxiosError(error)) {
       if (error.response) {
-        // Server responded with a status other than 2xx
         res.status(error.response.status).json({ error: error.response.data });
       } else if (error.request) {
-        // Request was made but no response received
         res.status(500).json({ error: 'No response received from the API.' });
       } else {
-        // Something happened in setting up the request
         res.status(500).json({ error: 'Error setting up the request.' });
       }
     } else {
-      // Non-Axios error
       res.status(500).json({ error: 'An unexpected error occurred.' });
     }
   }

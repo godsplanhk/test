@@ -7,6 +7,4 @@ const IndeedRouter = Router()
 IndeedRouter.post("/search", searchIndeedJobs)
 IndeedRouter.post("/details", getIndeedJobDetails)
 
-
-
 export default IndeedRouter

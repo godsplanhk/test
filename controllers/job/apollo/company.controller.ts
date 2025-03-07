@@ -63,3 +63,62 @@ export const searchApolloOrganizations = async (req: Request, res: Response) => 
         });
     }
 };
+
+
+export const searchOrganizationsUrl = async (req: Request, res: Response) => {
+    const { url, page } = req.body; 
+    const apiKey = req.headers['x-api-key'];
+
+    if (!apiKey || !url) {
+        res.status(400).json({ error: "API key and URL are required" });
+        return;
+    }
+
+    const options = {
+        method: 'POST',
+        url: 'https://apollo-io-no-cookies-required.p.rapidapi.com/search_organizations_via_url',
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': 'apollo-io-no-cookies-required.p.rapidapi.com',
+            'Content-Type': 'application/json'
+        },
+        data: {
+            url,
+            page: page || 1
+        }
+    };
+
+    try {
+        const response = await axios.request(options);
+        res.json(response.data);
+    } catch (error: any) {
+        res.status(error.response?.status || 500).json({ error: error.message });
+    }
+};
+
+export const getOrganizationDetails = async (req: Request, res: Response) => {
+    const { organization_id } = req.query;
+    const apiKey = req.headers['x-api-key'];
+
+    if (!apiKey || !organization_id) {
+        res.status(400).json({ error: "API key and organization ID are required" });
+        return 
+    }
+
+    const options = {
+        method: 'GET',
+        url: 'https://apollo-io-no-cookies-required.p.rapidapi.com/organization_details',
+        params: { organization_id },
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': 'apollo-io-no-cookies-required.p.rapidapi.com'
+        }
+    };
+
+    try {
+        const response = await axios.request(options);
+        res.json(response.data);
+    } catch (error: any) {
+        res.status(error.response?.status || 500).json({ error: error.message });
+    }
+};
