@@ -24,7 +24,7 @@ export const facebook_profile_scraper = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data);
+        res.status(200).json({data:response.data.profile});
         return;
     } catch (error: any) {
         console.error("Error fetching Facebook profile details:", error);

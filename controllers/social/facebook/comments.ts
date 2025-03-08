@@ -32,7 +32,7 @@ export const facebook_comment_scraper = async (req: Request, res: Response) => {
         });
 
         
-        res.status(200).json({ comments:comments.slice(0,limit?limit:2), cursor:response.data.cursor });
+        res.status(200).json({ data:comments.slice(0,limit?limit:2), cursor:response.data.cursor });
     } catch (error:any) {
         console.log(error);
         res.status(error?.status)

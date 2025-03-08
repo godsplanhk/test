@@ -22,7 +22,7 @@ export const facebook_group_details = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data);
+        res.status(200).json({data:response.data.group_details});
     } catch (error: any) {
         res.status(error.response?.status || 500).json({ error: error.message });
     }
