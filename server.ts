@@ -25,28 +25,28 @@ dotenv.config();
 const app = express();
 
 // Security Middleware
-app.use(helmet());
-app.use(compression());
+// app.use(helmet());
+// app.use(compression());
 
-// Rate Limiting (Prevents API abuse)
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
-  message: "Too many requests, please try again later.",
-});
-app.use(limiter);
+// // Rate Limiting (Prevents API abuse)
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100, // Limit each IP to 100 requests per window
+//   message: "Too many requests, please try again later.",
+// });
+// app.use(limiter);
 
-// Logging
-app.use(morgan("combined"));
+// // Logging
+// app.use(morgan("combined"));
 
-// CORS Configuration
-const allowedOrigins = ["*"];
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: "GET,POST,PUT,DELETE",
-  })
-);
+// // CORS Configuration
+// const allowedOrigins = ["*"];
+// app.use(
+//   cors({
+//     origin: allowedOrigins,
+//     methods: "GET,POST,PUT,DELETE",
+//   })
+// );
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -70,28 +70,28 @@ app.use("/db", DatabaseRouter);
 app.post("/influencerSearch", searchInfluencers);
 
 // Global Error Handler
-app.use((err:any, req:Request, res:Response, next:NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
-});
+// app.use((err:any, req:Request, res:Response, next:NextFunction) => {
+//   console.error(err.stack);
+//   res.status(500).json({ error: "Internal Server Error" });
+// });
 
-// Handle 404 Errors
-app.use((req, res) => {
-  res.status(404).json({ error: "Not Found" });
-});
+// // Handle 404 Errors
+// app.use((req, res) => {
+//   res.status(404).json({ error: "Not Found" });
+// });
 
-// Graceful Shutdown Handling
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err);
-  process.exit(1);
-});
+// // Graceful Shutdown Handling
+// process.on("uncaughtException", (err) => {
+//   console.error("Uncaught Exception:", err);
+//   process.exit(1);
+// });
 
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("Unhandled Rejection at:", promise, "reason:", reason);
-});
+// process.on("unhandledRejection", (reason, promise) => {
+//   console.error("Unhandled Rejection at:", promise, "reason:", reason);
+// });
 
 // Start Server
-const PORT = process.env.PORT || 5300;
+const PORT = 5300;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
