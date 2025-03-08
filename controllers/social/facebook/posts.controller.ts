@@ -1,0 +1,128 @@
+import { ApifyClient } from "apify-client";
+import axios from "axios";
+import { Request, Response } from "express";
+
+export const facebook_single_post_scraper = async (req:Request, res:Response) => {
+    const postId = req.body.post_id;
+    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+
+    if (!postId || !apiKey) {
+        res.status(400).json({ error: 'post_id query parameter is required' });
+        return 
+    }
+
+    const options = {
+        method: 'GET',
+        url: 'https://facebook-scraper3.p.rapidapi.com/post',
+        params: { post_id: postId },
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
+        }
+    };
+
+    try {
+        const response = await axios.request(options);
+        res.status(200).json({data:response.data.results});
+    } catch (error:any) {
+        res.status(error.status || 500).json({ error: error.message });
+    }
+};
+
+
+export const facebook_profile_posts_scraper = async (req:Request, res:Response) => {
+    const {profile_id, cursor, start_date, end_date} = req.body;
+    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+
+    if (!profile_id || !apiKey) {
+        res.status(400).json({ error: 'post_id query parameter is required' });
+        return 
+    }
+
+    const options = {
+        method: 'GET',
+        url: 'https://facebook-scraper3.p.rapidapi.com/profile/posts',
+        params: { profile_id, 
+            ...(cursor && {cursor}),
+            ...(start_date && {start_date}),
+            ...(end_date && {end_date}),
+        },
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
+        }
+    };
+
+    try {
+        const response = await axios.request(options);
+        res.status(200).json({data:response.data.results});
+    } catch (error:any) {
+        res.status(error.status || 500).json({ error: error.message });
+    }
+};
+
+
+export const facebook_likes_scraper = async (req: Request, res: Response) => {
+    
+    const {url,limit} = req.body;
+    const apiKey = req.headers['x-api-key']
+    
+    if (!url || !apiKey) {
+        res.status(400).json({ error: 'Profile URL is required' });
+        return;
+    }
+    const client = new ApifyClient({
+        token: apiKey as string,
+    });
+
+    const input = {
+        "startUrls": [{ "url": url }],
+        "resultsLimit": limit || 10
+    };
+
+    try {
+        const run = await client.actor("apify/facebook-likes-scraper").call(input);
+        const { items } = await client.dataset(run.defaultDatasetId).listItems();
+        res.status(200).json({ data: items });
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const facebook_comments_scraper = async (req: Request, res: Response) => {
+    const { post_id:post, limit } = req.body;
+    const apiKey = req.headers["x-api-key"] as string;
+
+    if (!post) {
+        res.status(400).json({ "error": "Please provide the post_id" });
+        return;
+    }
+    const params = post.includes("facebook.com") ? {post_url:post} : {post_id:post}
+    const options = {
+        method: 'GET',
+        url: 'https://facebook-scraper3.p.rapidapi.com/post/comments',
+        params: params,
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
+        }
+    };
+
+    const regex = /(?:facebook\.com\/(?:people\/)?)([a-zA-Z0-9.-]+)/;
+
+    try {
+        const response = await axios.request(options);
+        const comments = response.data.results.map((comment:any)=>{
+            return {
+                ...comment.author,
+                username:comment.author.url?.match(regex)[1] ?? ""
+            }
+        });
+
+        
+        res.status(200).json({ data:comments.slice(0,limit?limit:2), cursor:response.data.cursor });
+    } catch (error:any) {
+        console.log(error);
+        res.status(error?.status)
+    }
+};
