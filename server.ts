@@ -24,32 +24,9 @@ dotenv.config();
 
 const app = express();
 
-// Security Middleware
-// app.use(helmet());
-// app.use(compression());
-
-// // Rate Limiting (Prevents API abuse)
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 100, // Limit each IP to 100 requests per window
-//   message: "Too many requests, please try again later.",
-// });
-// app.use(limiter);
-
-// // Logging
-// app.use(morgan("combined"));
-
-// // CORS Configuration
-// const allowedOrigins = ["*"];
-// app.use(
-//   cors({
-//     origin: allowedOrigins,
-//     methods: "GET,POST,PUT,DELETE",
-//   })
-// );
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
 
 // API Routes
 app.use("/social/instagram", InstagramRouter);
