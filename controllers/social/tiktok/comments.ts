@@ -22,7 +22,7 @@ export const tiktok_comments_scraper = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data.comments);
+        res.status(200).json({data:response.data.comments});
         return;
     } catch (error: any) {
         console.error("Error fetching TikTok post comments:", error);

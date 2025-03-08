@@ -25,7 +25,7 @@ export const yt_comments_scraper = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json({comments:response.data?.comments.slice(0, limit || 2), next:response?.data.cursorNext});
+        res.status(200).json({data:response.data?.comments.slice(0, limit || 2), cursor:response?.data.cursorNext});
         return 
     } catch (error: any) {
         console.error("Error fetching YouTube video comments:", error);

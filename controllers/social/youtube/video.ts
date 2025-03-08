@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Request, Response } from "express";
+import { convertSecondsToHHMMSS, convertTimestampToDate } from '../../../utils/helpers';
 
 export const yt_video_scraper = async (req: Request, res: Response) => {
     const { video } = req.body; // Get video ID from request
@@ -24,7 +25,7 @@ export const yt_video_scraper = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data);
+        res.status(200).json({data:{...response.data, length:convertSecondsToHHMMSS(response.data.lengthSeconds)}});
         return 
     } catch (error: any) {
         console.error("Error fetching video details:", error);

@@ -52,7 +52,7 @@ export const tiktok_hashtag_scraper = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data.itemList);
+        res.status(200).json({data:response.data.itemList});
         return;
     } catch (error: any) {
         console.error("Error fetching TikTok challenge posts:", error);

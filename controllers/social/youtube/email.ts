@@ -21,7 +21,7 @@ export const yt_email_finder = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json({email:response.data.data.email[0]});
+        res.status(200).json({data:response.data.data.email[0]});
     } catch (error: any) {
         console.error("Error fetching YouTube email:", error);
         res.status(error?.response?.status || 500).json({ error: error.message });

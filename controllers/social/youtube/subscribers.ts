@@ -20,7 +20,7 @@ export const yt_subscriptions = async (req: Request, res: Response) => {
             channelId: channelId,
             
         });
-        res.status(200).json(response.data.items);
+        res.status(200).json({data: response.data.items});
     } catch (error: any) {
         res.status(500).json({ error: error.message });
     }

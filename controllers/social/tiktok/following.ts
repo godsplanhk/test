@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Request, Response } from "express";
 
 export const tiktok_following_scraper = async (req: Request, res: Response) => {
-    const { id:secUid, count = '30', minCursor = '0' } = req.body; // Get parameters from request body
+    const { id:secUid, count = '30', cursor:minCursor = '0' } = req.body; // Get parameters from request body
     const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
     if (!secUid) {
@@ -22,7 +22,7 @@ export const tiktok_following_scraper = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data.userList);
+        res.status(200).json({data:response.data.userList});
         return;
     } catch (error: any) {
         console.error("Error fetching TikTok followers:", error);

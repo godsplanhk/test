@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 
 export const x_comments_api = async (req: Request, res: Response) => {
-    const { postId, count } = req.body; // Get Twitter post ID and count from request body
+    const { postId, count, cursor } = req.body; // Get Twitter post ID and count from request body
     const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
     if (!postId) {
@@ -21,8 +21,9 @@ export const x_comments_api = async (req: Request, res: Response) => {
         url: 'https://twitter241.p.rapidapi.com/comments',
         params: {
             pid: postId,
-            count: count || '2',
-            rankingMode: 'Relevance'
+            count: count || '1',
+            rankingMode: 'Relevance',
+            ...(cursor && {cursor})
         },
         headers: {
             'x-rapidapi-key': apiKey,

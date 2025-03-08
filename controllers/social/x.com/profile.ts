@@ -27,7 +27,7 @@ export const x_profile_info = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data.result.data.user.result);
+        res.status(200).json({data:response.data.result.data.user.result});
         return;
     } catch (error: any) {
         console.error("Error fetching Twitter user info:", error);

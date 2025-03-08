@@ -22,7 +22,7 @@ export const tiktok_profile_scraper = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json({...response.data.userInfo.user, ...response.data.userInfo.stats});
+        res.status(200).json({data:{...response.data.userInfo.user, ...response.data.userInfo.stats}});
         return
     } catch (error: any) {
         console.error("Error fetching TikTok user info:", error);
