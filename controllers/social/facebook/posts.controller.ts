@@ -64,7 +64,7 @@ export const facebook_profile_posts_scraper = async (req:Request, res:Response) 
 
 export const facebook_likes_scraper = async (req: Request, res: Response) => {
     
-    const {url,limit} = req.body;
+    const {url,limit,} = req.body;
     const apiKey = req.headers['x-api-key']
     
     if (!url || !apiKey) {
@@ -90,18 +90,17 @@ export const facebook_likes_scraper = async (req: Request, res: Response) => {
 };
 
 export const facebook_comments_scraper = async (req: Request, res: Response) => {
-    const { post_id:post, limit } = req.body;
+    const { id, limit, cursor } = req.body;
     const apiKey = req.headers["x-api-key"] as string;
 
-    if (!post) {
+    if (!id) {
         res.status(400).json({ "error": "Please provide the post_id" });
         return;
     }
-    const params = post.includes("facebook.com") ? {post_url:post} : {post_id:post}
     const options = {
         method: 'GET',
         url: 'https://facebook-scraper3.p.rapidapi.com/post/comments',
-        params: params,
+        params: {post_id:id, ...(cursor && {cursor})},
         headers: {
             'x-rapidapi-key': apiKey,
             'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
@@ -112,15 +111,8 @@ export const facebook_comments_scraper = async (req: Request, res: Response) => 
 
     try {
         const response = await axios.request(options);
-        const comments = response.data.results.map((comment:any)=>{
-            return {
-                ...comment.author,
-                username:comment.author.url?.match(regex)[1] ?? ""
-            }
-        });
-
         
-        res.status(200).json({ data:comments.slice(0,limit?limit:2), cursor:response.data.cursor });
+        res.status(200).json({ data:response.data.results.slice(0,limit?limit:2), cursor:response.data.cursor });
     } catch (error:any) {
         console.log(error);
         res.status(error?.status)
