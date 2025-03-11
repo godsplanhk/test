@@ -72,7 +72,7 @@ export const tiktok_following_scraper = async (req: Request, res: Response) => {
 
     const options = {
         method: 'GET',
-        url: 'https://tiktok-api23.p.rapidapi.com/api/user/following',
+        url: 'https://tiktok-api23.p.rapidapi.com/api/user/followings',
         params: { secUid, count, minCursor },
         headers: {
             'x-rapidapi-key': apiKey,
