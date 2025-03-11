@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { convertSecondsToHHMMSS, convertTimestampToDate } from '../../../utils/helpers';
 
 export const yt_video_scraper = async (req: Request, res: Response) => {
-    const { video } = req.body; // Get video ID from request
+    const { url:video } = req.body; // Get video ID from request
     const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
     if (!video) {
@@ -36,7 +36,7 @@ export const yt_video_scraper = async (req: Request, res: Response) => {
 
 
 export const yt_videos_scraper = async (req: Request, res: Response) => {
-    const { channel, filter, cursor } = req.body; // Get video ID from request
+    const { channel_id:channel, filter, cursor } = req.body; // Get video ID from request
     const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
     if (!channel) {
@@ -74,7 +74,7 @@ export const yt_videos_scraper = async (req: Request, res: Response) => {
 };
 
 export const yt_comments_scraper = async (req: Request, res: Response) => {
-    const { video, limit, cursor } = req.body;
+    const { video_id:video, limit, cursor } = req.body;
     const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
     if (!video) {

@@ -28,7 +28,7 @@ export const x_tweet = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data);
+        res.status(200).json({data:response.data.tweet});
         return;
     } catch (error: any) {
         console.error("Error fetching Twitter tweet details:", error);
@@ -38,7 +38,7 @@ export const x_tweet = async (req: Request, res: Response) => {
 };
 
 export const x_retweets = async (req: Request, res: Response) => {
-    const { postId, limit } = req.body; // Get Twitter post ID from request body
+    const { postId, count, cursor } = req.body; // Get Twitter post ID from request body
     const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
     if (!postId) {
@@ -56,17 +56,18 @@ export const x_retweets = async (req: Request, res: Response) => {
         url: 'https://twitter241.p.rapidapi.com/retweets',
         params: {
           pid: postId,
-          count: limit || '5'
+          count: count || '5',
+          ...(cursor&&{cursor})
         },
         headers: {
-          'x-rapidapi-key': '53adfd298emsh111caccbdb92fc9p181a7cjsn99b33edc1aa7',
+          'x-rapidapi-key': apiKey,
           'x-rapidapi-host': 'twitter241.p.rapidapi.com'
         }
       };
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data);
+        res.status(200).json({data:response.data.result.timeline.instructions[0].entries, cursor:response.data.cursor});
         return;
     } catch (error: any) {
         console.error("Error fetching Twitter tweet details:", error);
@@ -106,7 +107,7 @@ export const x_comments_api = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data);
+        res.status(200).json({data:response.data.result.instructions[0].entries, cursor:response.data.cursor});
         return;
     } catch (error: any) {
         console.error("Error fetching Twitter post comments:", error);

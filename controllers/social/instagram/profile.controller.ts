@@ -52,7 +52,7 @@ export async function ig_profile_scraper(req: Request, res: Response) {
 }
 
 export async function ig_followers_scraper(req: Request, res: Response) {
-    const { id, end_cursor, limit } = req.body;
+    const { id, cursor, limit } = req.body;
     const apiKey = req.headers['x-api-key'] as string;
   
     if (!apiKey || !id) {
@@ -62,8 +62,8 @@ export async function ig_followers_scraper(req: Request, res: Response) {
   
     try {
       // Fetch hashtag details
-      const response = await axios.get(`${API_BASE_URL}/gql/user/followers/chunk`, {
-        params: { user_id:id, end_cursor },
+      const response = await axios.get(`${API_BASE_URL}/v2/user/followers`, {
+        params: { user_id:id, ...(cursor && {page_id:cursor}) },
         headers: {
           'x-access-key': `${apiKey}`,
           'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export async function ig_followers_scraper(req: Request, res: Response) {
       }
   
       // Send the hashtag data as the response
-      res.status(200).json({ data: limit?response.data[0].slice(0,limit):response.data[0], cursor:response.data[1] });
+      res.status(200).json({ data: response.data.response.users, cursor:response.data.response.next_page_id });
     } catch (error) {
       // Handle errors
       if (axios.isAxiosError(error)) {
@@ -99,9 +99,8 @@ export async function ig_followers_scraper(req: Request, res: Response) {
     }
   }
 
-  
   export async function ig_following_scraper(req: Request, res: Response) {
-    const { id, limit } = req.body;
+    const { id, cursor, limit } = req.body;
     const apiKey = req.headers['x-api-key'] as string;
   
     if (!apiKey || !id) {
@@ -111,8 +110,8 @@ export async function ig_followers_scraper(req: Request, res: Response) {
   
     try {
       // Fetch hashtag details
-      const response = await axios.get(`${API_BASE_URL}/gql/user/following/chunk`, {
-        params: { user_id:id },
+      const response = await axios.get(`${API_BASE_URL}/v2/user/following`, {
+        params: { user_id:id, ...(cursor && {page_id:cursor}) },
         headers: {
           'x-access-key': `${apiKey}`,
           'Content-Type': 'application/json',
@@ -127,8 +126,7 @@ export async function ig_followers_scraper(req: Request, res: Response) {
       }
   
       // Send the hashtag data as the response
-      res.status(200).json({ data: limit?response.data[0].slice(0,limit):response.data[0], cursor:response.data[1] });
-  
+      res.status(200).json({ data: response.data.response.users, cursor:response.data.response.next_page_id });
     } catch (error) {
       // Handle errors
       if (axios.isAxiosError(error)) {

@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { google } from 'googleapis';
 
 export const yt_channel_details = async (req: Request, res: Response) => {
-    const { channel } = req.body;
+    const { channel_id:channel } = req.body;
     const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
     if (!channel) {
@@ -62,17 +62,17 @@ export const yt_subscriptions = async (req: Request, res: Response) => {
 
 
 export const yt_email_finder = async (req: Request, res: Response) => {
-    const { channelId } = req.body;
+    const { channel_id } = req.body;
     const apiKey = req.headers["x-api-key"] as string; // Using API key from request headers
 
-    if (!channelId) {
+    if (!channel_id) {
         res.status(400).json({ error: "Please provide a channel ID" });
         return 
     }
 
     const options = {
         method: 'GET',
-        url: `https://youtube-email-finder.p.rapidapi.com/youtube/channel_id/${channelId}`,
+        url: `https://youtube-email-finder.p.rapidapi.com/youtube/channel_id/${channel_id}`,
         headers: {
             'x-rapidapi-key': apiKey,
             'x-rapidapi-host': 'youtube-email-finder.p.rapidapi.com'

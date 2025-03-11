@@ -27,7 +27,9 @@ export const x_users_by_id = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data.result.data);
+
+        const formatted = response.data.result.data.users.map((i:any)=>i.result)
+        res.status(200).json({data:formatted});
         return;
     } catch (error: any) {
         console.error("Error fetching Twitter users info:", error);
@@ -65,7 +67,7 @@ export const x_hashtags = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json(response.data.result.communities_search_slice);
+        res.status(200).json({data:response.data.result.communities_search_slice.items});
         return;
     } catch (error: any) {
         console.error("Error fetching Twitter community search results:", error);

@@ -55,7 +55,7 @@ export const x_followers = async (req: Request, res: Response) => {
         url: 'https://twitter241.p.rapidapi.com/followers-ids',
         params: {
             username,
-            count: count || '1'
+            count: count || '5'
         },
         headers: {
             'x-rapidapi-key': apiKey,
@@ -67,7 +67,7 @@ export const x_followers = async (req: Request, res: Response) => {
         const response = await axios.request(options);
         const ids = response.data.ids.join(",");
         
-        res.status(200).json({ids:ids});
+        res.status(200).json({data:ids});
 
         return;
     } catch (error: any) {
@@ -108,7 +108,7 @@ export const x_following = async (req: Request, res: Response) => {
         const response = await axios.request(options);
         const ids = response.data.ids.join(",");
         
-        res.status(200).json({ids:ids});
+        res.status(200).json({data:ids});
 
         return;
     } catch (error: any) {
