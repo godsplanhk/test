@@ -72,7 +72,7 @@ export const tiktok_comments_scraper = async (req: Request, res: Response) => {
         res.status(400).json({ error: "Please provide a TikTok videoId" });
         return;
     }
-
+    
     const options = {
         method: 'GET',
         url: 'https://tiktok-api23.p.rapidapi.com/api/post/comments',
