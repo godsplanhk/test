@@ -86,19 +86,28 @@ export async function ig_post_scraper(req: Request, res: Response) {
         },
       });
   
-  
       // Check if the hashtag was found
       if (!response.data) {
       res.status(404).json({ error: 'Hashtag not found.' });
         return 
       }
-      
-      const raw_data = response.data.media_or_ad.caption
+      const raw_data = response.data.media_or_ad
+          
       // Send the hashtag data as the response
-      const hashtags = raw_data.text.match(/#\w+/g).map((tag:string) => tag.substring(1));
-      res.status(200).json({ data: {hashtags,...raw_data, text:raw_data.text.replace(/#\S+/g, "")} });
-    } catch (error) {
+      try{
+      let hashtags = []
+      if(raw_data.caption.text){
+      hashtags = raw_data.caption.text.match(/#\w+/g).map((tag:string) => tag.substring(1));
+      }
+      res.status(200).json({ data: {hashtags,...raw_data, text:raw_data.caption.text && raw_data.caption.text.replace(/#\S+/g, "")} });
+    }
+    catch{
+      res.status(200).json({data:raw_data})
+      return
+    }
+    } catch (error:any) {
       // Handle errors
+      console.log(error.message)
       if (axios.isAxiosError(error)) {
         if (error.response) {
           // Server responded with a status other than 2xx
