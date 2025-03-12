@@ -92,10 +92,11 @@ export async function ig_post_scraper(req: Request, res: Response) {
       res.status(404).json({ error: 'Hashtag not found.' });
         return 
       }
-  
+      
+      const raw_data = response.data.media_or_ad.caption
       // Send the hashtag data as the response
-      const hashtags = response.data.media_or_ad.caption.text.match(/#\w+/g).map((tag:string) => tag.substring(1));
-      res.status(200).json({ data: {hashtags,...response.data.media_or_ad} });
+      const hashtags = raw_data.text.match(/#\w+/g).map((tag:string) => tag.substring(1));
+      res.status(200).json({ data: {hashtags,...raw_data, text:raw_data.text.replace(/#\S+/g, "")} });
     } catch (error) {
       // Handle errors
       if (axios.isAxiosError(error)) {

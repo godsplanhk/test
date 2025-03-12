@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { google } from 'googleapis';
 
 export const yt_channel_details = async (req: Request, res: Response) => {
-    const { channel_id:channel } = req.body;
+    const { url:channel } = req.body;
     const apiKey = req.headers["x-api-key"] as string; // API key from request headers
 
     if (!channel) {
