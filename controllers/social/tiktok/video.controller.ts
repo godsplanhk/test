@@ -76,7 +76,7 @@ export const tiktok_comments_scraper = async (req: Request, res: Response) => {
     const options = {
         method: 'GET',
         url: 'https://tiktok-api23.p.rapidapi.com/api/post/comments',
-        params: { videoId, count, cursor },
+        params: { videoId, count: (parseInt(count) + 1).toString(), cursor },
         headers: {
             'x-rapidapi-key': apiKey,
             'x-rapidapi-host': 'tiktok-api23.p.rapidapi.com'
