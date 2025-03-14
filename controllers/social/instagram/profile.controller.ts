@@ -78,7 +78,7 @@ export async function ig_followers_scraper(req: Request, res: Response) {
       }
   
       // Send the hashtag data as the response
-      res.status(200).json({ data: response.data.response.users, cursor:response.data.response.next_page_id });
+      res.status(200).json({ data: !limit ? response.data.response.users : response.data.response.users.slice(0, limit), cursor:response.data.response.next_page_id });
     } catch (error) {
       // Handle errors
       if (axios.isAxiosError(error)) {
@@ -126,7 +126,7 @@ export async function ig_followers_scraper(req: Request, res: Response) {
       }
   
       // Send the hashtag data as the response
-      res.status(200).json({ data: response.data.response.users, cursor:response.data.response.next_page_id });
+      res.status(200).json({ data: !limit ? response.data.response.users : response.data.response.users.slice(0, limit), cursor:response.data.response.next_page_id });
     } catch (error) {
       // Handle errors
       if (axios.isAxiosError(error)) {

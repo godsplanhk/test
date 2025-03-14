@@ -55,7 +55,7 @@ export const tiktok_videos_scraper = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        res.status(200).json({data:response.data.data.itemList, cursor:response.data.data.cursor});
+        res.status(200).json({data:response.data.data});
         return;
     } catch (error: any) {
         console.error("Error fetching TikTok post details:", error);
