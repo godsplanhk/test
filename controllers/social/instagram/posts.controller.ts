@@ -33,9 +33,7 @@ export async function ig_posts_scraper(req: Request, res: Response) {
 
     const data = response.data.response.items.map((item:any) => {
       try {
-        console.log(item.caption.text)
         const hashtags = item.caption.text.match(/#\w+/g).map((tag:string) => tag.substring(1));
-        console.log(hashtags)
         return {
           hashtags,
           ...item
@@ -62,7 +60,6 @@ export async function ig_posts_scraper(req: Request, res: Response) {
       }
     } else {
       // Non-Axios error
-      console.log(error)
       res.status(500).json({ error: 'An unexpected error occurred.' });
     }
   }
@@ -108,7 +105,6 @@ export async function ig_post_scraper(req: Request, res: Response) {
     }
     } catch (error:any) {
       // Handle errors
-      console.log(error.message)
       if (axios.isAxiosError(error)) {
         if (error.response) {
           // Server responded with a status other than 2xx

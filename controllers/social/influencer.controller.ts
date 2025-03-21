@@ -12,7 +12,6 @@ export const searchInfluencers = async (req: Request, res: Response) => {
     return;
   }
 
-  console.log(API_KEYS.INFLUENCER_API_KEY)
   if (!API_KEYS.INFLUENCER_API_KEY) {
     res.status(400).json({ error: "API key is required" });
     return;

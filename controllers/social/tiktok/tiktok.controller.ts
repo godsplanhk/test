@@ -64,7 +64,6 @@ export const tiktok_hashtag_scraper = async (req: Request, res: Response) => {
     }
 
     const id = await helper(hashtag)
-    console.log(id)
     if(!id){
         res.status(404).json({ error: "Hashtag not found" });
         return;

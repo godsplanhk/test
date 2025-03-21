@@ -23,7 +23,6 @@ export async function ig_hashtag_scraper(req: Request, res: Response) {
       },
     });
 
-    console.log(response.data)
 
     // Check if the hashtag was found
     if (!response.data) {

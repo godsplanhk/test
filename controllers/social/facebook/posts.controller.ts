@@ -114,7 +114,6 @@ export const facebook_comments_scraper = async (req: Request, res: Response) => 
         
         res.status(200).json({ data:response.data.results.slice(0,limit?limit:2), cursor:response.data.cursor });
     } catch (error:any) {
-        console.log(error);
         res.status(error?.status)
     }
 };

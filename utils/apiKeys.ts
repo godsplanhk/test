@@ -5,7 +5,6 @@ dotenv.config();
 // Helper function to parse API keys from environment variables
 const getApiKeysArray = (baseName: string) => {
   const envValue = process.env[`${baseName}`] || '';
-  console.log(envValue)
   return envValue ? envValue.split(',').map(key => key.trim()).filter(Boolean) : [];
 };
 

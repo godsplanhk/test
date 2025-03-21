@@ -31,7 +31,6 @@ export const crunchbaseOrganizationDetails = async (req: Request, res: Response)
     const response = await axios.request(options);
     res.status(200).json(response.data);
   } catch (error: any) {
-    console.log(error);
     res.status(error.response?.status || 500).json({ error: error.message });
   }
 };
