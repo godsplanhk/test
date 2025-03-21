@@ -5,6 +5,7 @@ dotenv.config();
 // Helper function to parse API keys from environment variables
 const getApiKeysArray = (baseName: string) => {
   const envValue = process.env[`${baseName}`] || '';
+  console.log(baseName," ",envValue)
   return envValue ? envValue.split(',').map(key => key.trim()).filter(Boolean) : [];
 };
 
@@ -31,7 +32,8 @@ export const API_KEYS = {
     LINKEDIN_SALES_NAVIGATOR_API_KEY: getApiKeysArray('LINKEDIN_SALES_NAVIGATOR_API'),
     TIKTOK_API_KEY: getApiKeysArray('TIKTOK_API'),
     INFLUENCER_API_KEY: getApiKeysArray('INFLUENCER_API'),
-    MAPS_API_KEY: getApiKeysArray('MAPS_API')
+    MAPS_API_KEY: getApiKeysArray('MAPS_API'),
+    JOB_SEARCH_API_KEY: getApiKeysArray('JOB_SEARCH_API')
   },
 
   
@@ -90,5 +92,9 @@ export const API_KEYS = {
   
   get MAPS_API_KEY() {
     return getRandomItem(this._keyArrays.MAPS_API_KEY);
+  },
+
+  get JOB_SEARCH_API_KEY() {
+    return getRandomItem(this._keyArrays.JOB_SEARCH_API_KEY);
   }
 };

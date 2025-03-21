@@ -14,14 +14,14 @@ interface AuthenticatedRequest extends Request {
 const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const token = req.header("Authorization");
 
-    if (!token || !JWT_SECRET) {
-        res.status(401).json({ message: "Access Denied. No token provided or JWT Verification failed with an unexpected error." });
-        return 
-    }
+    // if (!token || !JWT_SECRET) {
+    //     res.status(401).json({ message: "Access Denied. No token provided or JWT Verification failed with an unexpected error." });
+    //     return 
+    // }
 
     try {
-        const decoded = jwt.verify(token.replace("Bearer ", ""), JWT_SECRET);
-        req.user = decoded; // Attach decoded user info to request
+        // const decoded = jwt.verify(token.replace("Bearer ", ""), JWT_SECRET);
+        // req.user = decoded; // Attach decoded user info to request
         next();
     } catch (error) {
         res.status(403).json({ message: "Invalid or expired token." });

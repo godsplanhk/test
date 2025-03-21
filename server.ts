@@ -12,14 +12,14 @@ import YouTubeRouter from "./routes/social/youtube.routes";
 import TikTokRouter from "./routes/social/tiktok.routes";
 import XRouter from "./routes/social/x.routes";
 import LinkedinRouter from "./routes/job/linkedin.routes";
-import GlassdoorRouter from "./routes/job/glassdoor.routes";
 import ApolloRouter from "./routes/job/apollo.routes";
 import MapsRouter from "./routes/maps.routes";
 import CrunchbaseRouter from "./routes/job/crunchbase.routes";
 import { searchInfluencers } from "./controllers/social/influencer.controller";
 import EnrichmentRouter from "./routes/enrichement.routes";
-import IndeedRouter from "./routes/job/indeed.routes";
 import DatabaseRouter from "./routes/db/social.logs.routes";
+import authMiddleware from "./middleware/auth.middleware";
+import JobSearch from "./routes/job/jobsearch.routes";
 
 dotenv.config();
 
@@ -40,26 +40,25 @@ dotenv.config();
   app.use(limiter);
 
   // Social API Routes
-  app.use("/social/instagram", InstagramRouter);
-  app.use("/social/facebook", FacebookRouter);
-  app.use("/social/youtube", YouTubeRouter);
-  app.use("/social/tiktok", TikTokRouter);
-  app.use("/social/x", XRouter);
+  app.use("/social/instagram", authMiddleware, InstagramRouter);
+  app.use("/social/facebook", authMiddleware, FacebookRouter);
+  app.use("/social/youtube", authMiddleware, YouTubeRouter);
+  app.use("/social/tiktok", authMiddleware, TikTokRouter);
+  app.use("/social/x", authMiddleware, XRouter);
 
   // Jobs API
-  app.use("/jobs/linkedin", LinkedinRouter);
-  app.use("/jobs/glassdoor", GlassdoorRouter);
-  app.use("/jobs/apollo", ApolloRouter);
-  app.use("/jobs/crunchbase", CrunchbaseRouter);
-  app.use("/jobs/indeed", IndeedRouter);
+  app.use("/jobs/linkedin", authMiddleware, LinkedinRouter);
+  app.use("/jobs/apollo", authMiddleware, ApolloRouter);
+  app.use("/jobs/crunchbase", authMiddleware, CrunchbaseRouter);
+  app.use("/jobs/search", authMiddleware, JobSearch);
 
   // Enrichment, Maps, and DB
-  app.use("/enrichment", EnrichmentRouter);
-  app.use("/maps", MapsRouter);
-  app.use("/db", DatabaseRouter);
+  app.use("/enrichment", authMiddleware, EnrichmentRouter);
+  app.use("/maps", authMiddleware, MapsRouter);
+  app.use("/db", authMiddleware, DatabaseRouter);
 
   // Influencer API
-  app.post("/influencerSearch", searchInfluencers);
+  app.post("/influencerSearch", authMiddleware, searchInfluencers);
 
   const PORT = process.env.PORT || 5300;
   app.listen(PORT);
