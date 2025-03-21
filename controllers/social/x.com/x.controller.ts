@@ -1,16 +1,17 @@
 import axios from 'axios';
 import { Request, Response } from "express";
+import { API_KEYS } from '../../../utils/apiKeys';
 
 export const x_users_by_id = async (req: Request, res: Response) => {
     const { userIds } = req.body; // Get Twitter user IDs from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!userIds) {
         res.status(400).json({ error: "Please provide an array of Twitter user IDs" });
         return;
     }
 
-    if (!apiKey) {
+    if (!API_KEYS.TWITTER_API_KEY) {
         res.status(400).json({ error: "Please provide an API key" });
         return;
     }
@@ -20,7 +21,7 @@ export const x_users_by_id = async (req: Request, res: Response) => {
         url: 'https://twitter241.p.rapidapi.com/get-users',
         params: { users: userIds },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TWITTER_API_KEY,
             'x-rapidapi-host': 'twitter241.p.rapidapi.com'
         }
     };
@@ -40,14 +41,14 @@ export const x_users_by_id = async (req: Request, res: Response) => {
 
 export const x_hashtags = async (req: Request, res: Response) => {
     const { query, count } = req.body;
-    const apiKey = req.headers["x-api-key"] as string;
+    
 
     if (!query) {
         res.status(400).json({ error: "Please provide a search query" });
         return;
     }
 
-    if (!apiKey) {
+    if (!API_KEYS.TWITTER_API_KEY) {
         res.status(400).json({ error: "Please provide an API key" });
         return;
     }
@@ -60,7 +61,7 @@ export const x_hashtags = async (req: Request, res: Response) => {
             count: count || '20'
         },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TWITTER_API_KEY,
             'x-rapidapi-host': 'twitter241.p.rapidapi.com'
         }
     };

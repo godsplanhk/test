@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
+import { API_KEYS } from '../../../utils/apiKeys';
 
 const API_BASE_URL = 'https://api.hikerapi.com';
 
 export async function ig_hashtag_scraper(req: Request, res: Response) {
   const { hashtag, limit } = req.body;
-  const apiKey = req.headers['x-api-key'] as string;
+  
 
-  if (!apiKey || !hashtag) {
+  if (!API_KEYS.INSTAGRAM_API_KEY || !hashtag) {
     res.status(400).json({ error: 'API key and hashtag are required.' });
     return 
   }
@@ -17,7 +18,7 @@ export async function ig_hashtag_scraper(req: Request, res: Response) {
     const response = await axios.get(`${API_BASE_URL}/v1/hashtag/medias/top`, {
       params: { name: hashtag, amount: limit },
       headers: {
-        'x-access-key': `${apiKey}`,
+        'x-access-key': `${API_KEYS.INSTAGRAM_API_KEY}`,
         'Content-Type': 'application/json',
       },
     });
@@ -54,9 +55,9 @@ export async function ig_hashtag_scraper(req: Request, res: Response) {
 
 export async function ig_id_generator(req: Request, res: Response) {
     const { url } = req.body;
-    const apiKey = req.headers['x-api-key'] as string;
+    
   
-    if (!apiKey || !url) {
+    if (!API_KEYS.INSTAGRAM_API_KEY || !url) {
       res.status(400).json({ error: 'API key and hashtag are required.' });
       return 
     }
@@ -69,7 +70,7 @@ export async function ig_id_generator(req: Request, res: Response) {
           response = await axios.get(`${API_BASE_URL}/v2/media/info/by/url`, {
             params: { url },
             headers: {
-              'x-access-key': `${apiKey}`,
+              'x-access-key': `${API_KEYS.INSTAGRAM_API_KEY}`,
               'Content-Type': 'application/json',
             },
           });
@@ -77,7 +78,7 @@ export async function ig_id_generator(req: Request, res: Response) {
           response = await axios.get(`${API_BASE_URL}/v1/user/by/url`, {
               params: { url },
               headers: {
-                'x-access-key': `${apiKey}`,
+                'x-access-key': `${API_KEYS.INSTAGRAM_API_KEY}`,
                 'Content-Type': 'application/json',
               },
           });

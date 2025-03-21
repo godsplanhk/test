@@ -1,16 +1,16 @@
 import axios from "axios";
 import { Request, Response } from "express";
+import { API_KEYS } from "../../../utils/apiKeys";
 
 export const crunchbaseOrganizationDetails = async (req: Request, res: Response) => {
   const { url } = req.body;
-  const apiKey = req.headers["x-api-key"] as string;
 
   // Validate inputs
   if (!url) {
     res.status(400).json({ error: "Data parameter is required" });
     return 
   }
-  if (!apiKey) {
+  if (!API_KEYS.APPOLLO_API_KEY) {
     res.status(400).json({ error: "API key is required" });
     return 
   }

@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { Request, Response } from "express";
+import { API_KEYS } from '../../../utils/apiKeys';
 
 export const tiktok_email_scraper = async (req: Request, res: Response) => {
     const {username} = req.body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
-    if (!apiKey || !username) {
+    if (!API_KEYS.TIKTOK_API_KEY || !username) {
         res.status(400).json({ error: "Please provide an API key and username." });
         return;
     }
@@ -14,7 +15,7 @@ export const tiktok_email_scraper = async (req: Request, res: Response) => {
         method: 'GET',
         url: `https://tiktok-email-contact-finder.p.rapidapi.com/tiktok/${username}`,
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TIKTOK_API_KEY,
             'x-rapidapi-host': 'tiktok-email-contact-finder.p.rapidapi.com'
         },
     };
@@ -55,7 +56,7 @@ async function helper(challenge_name:string){
 
 export const tiktok_hashtag_scraper = async (req: Request, res: Response) => {
     const { hashtag, count = '30', cursor = '0' } = req.body; // Get parameters from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!hashtag) {
         res.status(400).json({ error: "Please provide a TikTok challengeId" });
@@ -74,7 +75,7 @@ export const tiktok_hashtag_scraper = async (req: Request, res: Response) => {
         url: 'https://tiktok-api23.p.rapidapi.com/api/challenge/posts',
         params: { challengeId:id, count, cursor },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TIKTOK_API_KEY,
             'x-rapidapi-host': 'tiktok-api23.p.rapidapi.com'
         }
     };

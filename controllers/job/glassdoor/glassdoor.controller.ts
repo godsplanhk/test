@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Request, Response } from "express";
+import { API_KEYS } from "../../../utils/apiKeys";
 
 export const searchGlassdoorJobs = async (req: Request, res: Response) => {
   const {
@@ -23,14 +24,14 @@ export const searchGlassdoorJobs = async (req: Request, res: Response) => {
     limit = 10, // Default to 10 results
   } = req.body; // Get filters from request body
 
-  const apiKey = req.headers["x-api-key"] as string; // Get API key from headers
+   // Get API key from headers
 
   // Validate inputs
   if (!query) {
     res.status(400).json({ error: "Job query is required" });
     return 
   }
-  if (!apiKey) {
+  if (!API_KEYS.GLASSDOOR_API_KEY) {
     res.status(400).json({ error: "API key is required" });
     return 
   }
@@ -59,7 +60,7 @@ export const searchGlassdoorJobs = async (req: Request, res: Response) => {
     url: "https://glassdoor-real-time.p.rapidapi.com/jobs/search",
     params,
     headers: {
-      "x-rapidapi-key": apiKey,
+      "x-rapidapi-key": API_KEYS.GLASSDOOR_API_KEY,
       "x-rapidapi-host": "glassdoor-real-time.p.rapidapi.com",
     },
   };
@@ -85,14 +86,14 @@ export const searchGlassdoorJobs = async (req: Request, res: Response) => {
 
 export const glassdoorLocationId = async (req: Request, res: Response) => {
     const { query } = req.body; // Get location from request body
-    const apiKey = req.headers["x-api-key"] as string; // Get API key from headers
+     // Get API key from headers
   
     // Validate inputs
     if (!query) {
       res.status(400).json({ error: "Location query is required" });
       return;
     }
-    if (!apiKey) {
+    if (!API_KEYS.GLASSDOOR_API_KEY) {
       res.status(400).json({ error: "API key is required" });
       return;
     }
@@ -102,7 +103,7 @@ export const glassdoorLocationId = async (req: Request, res: Response) => {
       url: "https://glassdoor-real-time.p.rapidapi.com/jobs/location",
       params: { query },
       headers: {
-        "x-rapidapi-key": apiKey,
+        "x-rapidapi-key": API_KEYS.GLASSDOOR_API_KEY,
         "x-rapidapi-host": "glassdoor-real-time.p.rapidapi.com",
       },
     };
@@ -117,14 +118,14 @@ export const glassdoorLocationId = async (req: Request, res: Response) => {
 
   export const getGlassdoorJobDetails = async (req: Request, res: Response) => {
     const { listingId, queryString } = req.body; // Get listingId and queryString from request body
-    const apiKey = req.headers["x-api-key"] as string; // Get API key from headers
+     // Get API key from headers
   
     // Validate inputs
     if (!listingId || !queryString) {
       res.status(400).json({ error: "Both listingId and queryString are required" });
       return;
     }
-    if (!apiKey) {
+    if (!API_KEYS.GLASSDOOR_API_KEY) {
       res.status(400).json({ error: "API key is required" });
       return;
     }
@@ -134,7 +135,7 @@ export const glassdoorLocationId = async (req: Request, res: Response) => {
       url: "https://glassdoor-real-time.p.rapidapi.com/jobs/details",
       params: { listingId, queryString },
       headers: {
-        "x-rapidapi-key": apiKey,
+        "x-rapidapi-key": API_KEYS.GLASSDOOR_API_KEY,
         "x-rapidapi-host": "glassdoor-real-time.p.rapidapi.com",
       },
     };

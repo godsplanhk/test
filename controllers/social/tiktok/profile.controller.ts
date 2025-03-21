@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { Request, Response } from "express";
+import { API_KEYS } from '../../../utils/apiKeys';
 
 export const tiktok_profile_scraper = async (req: Request, res: Response) => {
     const { username:uniqueId } = req.body; // Get TikTok username from request
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!uniqueId) {
         res.status(400).json({ error: "Please provide a TikTok username (uniqueId)" });
@@ -15,7 +16,7 @@ export const tiktok_profile_scraper = async (req: Request, res: Response) => {
         url: 'https://tiktok-api23.p.rapidapi.com/api/user/info',
         params: { uniqueId },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TIKTOK_API_KEY,
             'x-rapidapi-host': 'tiktok-api23.p.rapidapi.com'
         }
     };
@@ -33,7 +34,7 @@ export const tiktok_profile_scraper = async (req: Request, res: Response) => {
 
 export const tiktok_followers_scraper = async (req: Request, res: Response) => {
     const { id:secUid, count = '30', cursor:minCursor = '0' } = req.body; // Get parameters from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!secUid) {
         res.status(400).json({ error: "Please provide a TikTok secUid" });
@@ -45,7 +46,7 @@ export const tiktok_followers_scraper = async (req: Request, res: Response) => {
         url: 'https://tiktok-api23.p.rapidapi.com/api/user/followers',
         params: { secUid, count, minCursor },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TIKTOK_API_KEY,
             'x-rapidapi-host': 'tiktok-api23.p.rapidapi.com'
         }
     };
@@ -63,7 +64,7 @@ export const tiktok_followers_scraper = async (req: Request, res: Response) => {
 
 export const tiktok_following_scraper = async (req: Request, res: Response) => {
     const { id:secUid, count = '30', cursor:minCursor = '0' } = req.body; // Get parameters from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!secUid) {
         res.status(400).json({ error: "Please provide a TikTok secUid" });
@@ -75,7 +76,7 @@ export const tiktok_following_scraper = async (req: Request, res: Response) => {
         url: 'https://tiktok-api23.p.rapidapi.com/api/user/followings',
         params: { secUid, count, minCursor },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TIKTOK_API_KEY,
             'x-rapidapi-host': 'tiktok-api23.p.rapidapi.com'
         }
     };

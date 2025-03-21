@@ -1,16 +1,17 @@
 import axios from "axios";
 import { Request, Response } from "express";
+import { API_KEYS } from "../../utils/apiKeys";
 
 export const getPlaceDetailedInformation = async (req: Request, res: Response) => {
   const { place_id } = req.body; // Extract place ID from request body
-  const apiKey = req.headers["x-api-key"] as string; // Get API key from request headers
+   // Get API key from request headers
 
   // Validate inputs
   if (!place_id) {
     res.status(400).json({ error: "Place ID is required" });
     return;
   }
-  if (!apiKey) {
+  if (!API_KEYS.MAPS_API_KEY) {
     res.status(400).json({ error: "API key is required" });
     return;
   }
@@ -26,7 +27,7 @@ export const getPlaceDetailedInformation = async (req: Request, res: Response) =
       reviews_no_translations: "true",
     },
     headers: {
-      "x-rapidapi-key": apiKey,
+      "x-rapidapi-key": API_KEYS.MAPS_API_KEY,
       "x-rapidapi-host": "google-map-places.p.rapidapi.com",
     },
   };
@@ -41,14 +42,14 @@ export const getPlaceDetailedInformation = async (req: Request, res: Response) =
 
 export const getPlaceDetails = async (req: Request, res: Response) => {
     const { place } = req.body; // Get place name from request body
-    const apiKey = req.headers["x-api-key"] as string; // Get API key from request headers
+     // Get API key from request headers
   
     // Validate inputs
     if (!place) {
       res.status(400).json({ error: "Place name is required" });
       return;
     }
-    if (!apiKey) {
+    if (!API_KEYS.MAPS_API_KEY) {
       res.status(400).json({ error: "API key is required" });
       return;
     }
@@ -63,7 +64,7 @@ export const getPlaceDetails = async (req: Request, res: Response) => {
         language: "en",
       },
       headers: {
-        "x-rapidapi-key": apiKey,
+        "x-rapidapi-key": API_KEYS.MAPS_API_KEY,
         "x-rapidapi-host": "google-map-places.p.rapidapi.com",
       },
     };
@@ -78,7 +79,7 @@ export const getPlaceDetails = async (req: Request, res: Response) => {
   
   export const searchPlaces = async (req: Request, res: Response) => {
     const { query, radius, location, opennow } = req.body; // Extract search parameters from request body
-    const apiKey = req.headers["x-api-key"] as string; // Get API key from request headers
+     // Get API key from request headers
   
     // Validate inputs
     if (!query) {
@@ -89,7 +90,7 @@ export const getPlaceDetails = async (req: Request, res: Response) => {
       res.status(400).json({ error: "Radius is required" });
       return;
     }
-    if (!apiKey) {
+    if (!API_KEYS.MAPS_API_KEY) {
       res.status(400).json({ error: "API key is required" });
       return;
     }
@@ -106,7 +107,7 @@ export const getPlaceDetails = async (req: Request, res: Response) => {
         region: "en",
       },
       headers: {
-        "x-rapidapi-key": apiKey,
+        "x-rapidapi-key": API_KEYS.MAPS_API_KEY,
         "x-rapidapi-host": "google-map-places.p.rapidapi.com",
       },
     };

@@ -1,12 +1,13 @@
 import axios from "axios";
 import { Request, Response } from "express";
+import { API_KEYS } from "../../../utils/apiKeys";
 
 // Controller to fetch job details by job ID
 export const getIndeedJobDetails = async (req: Request, res: Response) => {
     const { jobId, locality } = req.body; // Get jobId from request parameters
-    const apiKey = req.headers["x-api-key"] as string; // API key from headers
+ // API key from headers
 
-    if (!jobId || !apiKey) {
+    if (!jobId || !API_KEYS.INDEED_API_KEY) {
         res.status(400).json({ error: "jobId and x-api-key are required" });
         return 
     }
@@ -16,7 +17,7 @@ export const getIndeedJobDetails = async (req: Request, res: Response) => {
         url: `https://indeed12.p.rapidapi.com/job/${jobId}`,
         params: { ...(locality && { locality }) },
         headers: {
-            "x-rapidapi-key": apiKey,
+            "x-rapidapi-key": API_KEYS.INDEED_API_KEY,
             "x-rapidapi-host": "indeed12.p.rapidapi.com"
         }
     };
@@ -41,9 +42,9 @@ export const searchIndeedJobs = async (req: Request, res: Response) => {
         job_type
     } = req.body; // Extracting parameters from the request body
 
-    const apiKey = req.headers["x-api-key"] as string;
 
-    if (!query || !apiKey) {
+
+    if (!query || !API_KEYS.INDEED_API_KEY) {
         res.status(400).json({ error: "query and x-api-key are required" });
         return 
     }
@@ -62,7 +63,7 @@ export const searchIndeedJobs = async (req: Request, res: Response) => {
             ...(job_type && { job_type })
         },
         headers: {
-            "x-rapidapi-key": apiKey,
+            "x-rapidapi-key": API_KEYS.INDEED_API_KEY,
             "x-rapidapi-host": "indeed12.p.rapidapi.com"
         }
     };

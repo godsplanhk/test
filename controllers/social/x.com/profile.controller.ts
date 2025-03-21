@@ -1,16 +1,17 @@
 import axios from 'axios';
 import { Request, Response } from "express";
+import { API_KEYS } from '../../../utils/apiKeys';
 
 export const x_profile_info = async (req: Request, res: Response) => {
     const { username } = req.body; // Get Twitter username from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!username) {
         res.status(400).json({ error: "Please provide a Twitter username" });
         return;
     }
 
-    if (!apiKey) {
+    if (!API_KEYS.TWITTER_API_KEY) {
         res.status(400).json({ error: "Please provide an API key" });
         return;
     }
@@ -20,7 +21,8 @@ export const x_profile_info = async (req: Request, res: Response) => {
         url: 'https://twitter241.p.rapidapi.com/user',
         params: { username },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TWITTER_API_KEY
+            ,
             'x-rapidapi-host': 'twitter241.p.rapidapi.com'
         }
     };
@@ -38,14 +40,16 @@ export const x_profile_info = async (req: Request, res: Response) => {
 
 export const x_followers = async (req: Request, res: Response) => {
     const { username, count } = req.body; // Get Twitter username and count from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!username) {
         res.status(400).json({ error: "Please provide a Twitter username" });
         return;
     }
 
-    if (!apiKey) {
+    if (!API_KEYS.TWITTER_API_KEY
+
+    ) {
         res.status(400).json({ error: "Please provide an API key" });
         return;
     }
@@ -58,7 +62,8 @@ export const x_followers = async (req: Request, res: Response) => {
             count: count || '5'
         },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TWITTER_API_KEY
+            ,
             'x-rapidapi-host': 'twitter241.p.rapidapi.com'
         }
     };
@@ -79,14 +84,16 @@ export const x_followers = async (req: Request, res: Response) => {
 
 export const x_following = async (req: Request, res: Response) => {
     const { username, count } = req.body; // Get Twitter username and count from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!username) {
         res.status(400).json({ error: "Please provide a Twitter username" });
         return;
     }
 
-    if (!apiKey) {
+    if (!API_KEYS.TWITTER_API_KEY
+
+    ) {
         res.status(400).json({ error: "Please provide an API key" });
         return;
     }
@@ -99,7 +106,8 @@ export const x_following = async (req: Request, res: Response) => {
             count: count || '1'
         },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TWITTER_API_KEY
+            ,
             'x-rapidapi-host': 'twitter241.p.rapidapi.com'
         }
     };

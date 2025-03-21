@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
+import { API_KEYS } from '../../../utils/apiKeys';
 
 
 export const searchApolloPeople = async (req: Request, res: Response) => {
     try {
         const { person_name, page, not_organization_ids, organization_ids, person_past_organization_ids, person_titles, person_past_titles, person_not_titles, person_locations, zip_code, person_location_radius } = req.body;
-        const apiKey = req.headers['x-api-key'];
 
-        if (!apiKey) {
+        if (!API_KEYS.APPOLLO_API_KEY) {
             res.status(400).json({ error: "API key is required" });
             return 
         }
@@ -16,7 +16,7 @@ export const searchApolloPeople = async (req: Request, res: Response) => {
             method: 'GET',
             url: 'https://apollo-io-no-cookies-required.p.rapidapi.com/search_people',
             headers: {
-                'x-rapidapi-key': apiKey as string,
+                'x-rapidapi-key': API_KEYS.APPOLLO_API_KEY as string,
                 'x-rapidapi-host': 'apollo-io-no-cookies-required.p.rapidapi.com',
                 'Content-Type': 'application/json'
             },
@@ -48,10 +48,9 @@ export const searchApolloPeople = async (req: Request, res: Response) => {
 
 export const searchPeopleUrl = async (req:Request, res:Response) => {
     const {url, page} = req.body
-    
-    const apiKey = req.headers['x-api-key'];
 
-        if (!apiKey || !url) {
+
+        if (!API_KEYS.APPOLLO_API_KEY || !url) {
             res.status(400).json({ error: "API key and URL is required" });
             return 
         }
@@ -59,7 +58,7 @@ export const searchPeopleUrl = async (req:Request, res:Response) => {
     method: 'POST',
     url: 'https://apollo-io-no-cookies-required.p.rapidapi.com/search_people_via_url',
     headers: {
-      'x-rapidapi-key': apiKey,
+      'x-rapidapi-key': API_KEYS.APPOLLO_API_KEY,
       'x-rapidapi-host': 'apollo-io-no-cookies-required.p.rapidapi.com',
       'Content-Type': 'application/json'
     },
@@ -79,10 +78,9 @@ export const searchPeopleUrl = async (req:Request, res:Response) => {
 
 
 export const getPersonDetails = async (req: Request, res: Response) => {
-    const { person_id } = req.query;
-    const apiKey = req.headers['x-api-key'];
+    const { person_id } = req.query
 
-    if (!apiKey || !person_id) {
+    if (!API_KEYS.APPOLLO_API_KEY || !person_id) {
         res.status(400).json({ error: "API key and person ID are required" });
         return 
     }
@@ -92,7 +90,7 @@ export const getPersonDetails = async (req: Request, res: Response) => {
         url: 'https://apollo-io-no-cookies-required.p.rapidapi.com/person_details',
         params: { person_id },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.APPOLLO_API_KEY,
             'x-rapidapi-host': 'apollo-io-no-cookies-required.p.rapidapi.com'
         }
     };

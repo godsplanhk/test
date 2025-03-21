@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { Request, Response } from "express";
 import { convertSecondsToHHMMSS, convertTimestampToDate } from '../../../utils/helpers';
+import { API_KEYS } from '../../../utils/apiKeys';
 
 export const yt_video_scraper = async (req: Request, res: Response) => {
     const { url:video } = req.body; // Get video ID from request
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!video) {
         res.status(400).json({ error: "Please provide a video ID" });
@@ -18,7 +19,7 @@ export const yt_video_scraper = async (req: Request, res: Response) => {
             id: video,
         },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.YOUTUBE_API_KEY,
             'x-rapidapi-host': 'youtube138.p.rapidapi.com'
         }
     };
@@ -37,7 +38,7 @@ export const yt_video_scraper = async (req: Request, res: Response) => {
 
 export const yt_videos_scraper = async (req: Request, res: Response) => {
     const { channel_id:channel, filter, cursor } = req.body; // Get video ID from request
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!channel) {
         res.status(400).json({ error: "Please provide a video ID" });
@@ -53,7 +54,7 @@ export const yt_videos_scraper = async (req: Request, res: Response) => {
             ...(cursor && {cursor})
         },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.YOUTUBE_API_KEY,
             'x-rapidapi-host': 'youtube138.p.rapidapi.com'
         }
     };
@@ -75,7 +76,7 @@ export const yt_videos_scraper = async (req: Request, res: Response) => {
 
 export const yt_comments_scraper = async (req: Request, res: Response) => {
     const { video_id:video, limit, cursor } = req.body;
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!video) {
         res.status(400).json({ error: "Please provide a video ID" });
@@ -90,7 +91,7 @@ export const yt_comments_scraper = async (req: Request, res: Response) => {
             ...(cursor && {cursor})
         },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.YOUTUBE_API_KEY,
             'x-rapidapi-host': 'youtube138.p.rapidapi.com'
         }
     };

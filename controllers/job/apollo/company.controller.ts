@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
+import { API_KEYS } from '../../../utils/apiKeys';
 
 export const searchApolloOrganizations = async (req: Request, res: Response) => {
     try {
-        const apiKey = req.headers['x-api-key']; // API key from request headers
-        if (!apiKey) {
+         
+        if (!API_KEYS.APPOLLO_API_KEY) {
             res.status(401).json({ error: "Unauthorized: API key is missing" });
             return
         }
@@ -37,13 +38,13 @@ export const searchApolloOrganizations = async (req: Request, res: Response) => 
         if (organization_industry_tag_ids) params.organization_industry_tag_ids = organization_industry_tag_ids;
         if (q_organization_keyword_tags) params.q_organization_keyword_tags = q_organization_keyword_tags;
         if (organization_ids) params.organization_ids = organization_ids;
-
+ 
         // API request options
         const options = {
             method: "GET",
             url: "https://apollo-io-no-cookies-required.p.rapidapi.com/search_organization",
             headers: {
-                "x-rapidapi-key": apiKey as string,
+                "x-rapidapi-key": API_KEYS.APPOLLO_API_KEY as string,
                 "x-rapidapi-host": "apollo-io-no-cookies-required.p.rapidapi.com",
                 "Content-Type": "application/json"
             },
@@ -67,9 +68,9 @@ export const searchApolloOrganizations = async (req: Request, res: Response) => 
 
 export const searchOrganizationsUrl = async (req: Request, res: Response) => {
     const { url, page } = req.body; 
-    const apiKey = req.headers['x-api-key'];
+    
 
-    if (!apiKey || !url) {
+    if (!API_KEYS.APPOLLO_API_KEY || !url) {
         res.status(400).json({ error: "API key and URL are required" });
         return;
     }
@@ -78,7 +79,7 @@ export const searchOrganizationsUrl = async (req: Request, res: Response) => {
         method: 'POST',
         url: 'https://apollo-io-no-cookies-required.p.rapidapi.com/search_organizations_via_url',
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.APPOLLO_API_KEY,
             'x-rapidapi-host': 'apollo-io-no-cookies-required.p.rapidapi.com',
             'Content-Type': 'application/json'
         },
@@ -98,9 +99,9 @@ export const searchOrganizationsUrl = async (req: Request, res: Response) => {
 
 export const getOrganizationDetails = async (req: Request, res: Response) => {
     const { organization_id } = req.query;
-    const apiKey = req.headers['x-api-key'];
+    
 
-    if (!apiKey || !organization_id) {
+    if (!API_KEYS.APPOLLO_API_KEY || !organization_id) {
         res.status(400).json({ error: "API key and organization ID are required" });
         return 
     }
@@ -110,7 +111,7 @@ export const getOrganizationDetails = async (req: Request, res: Response) => {
         url: 'https://apollo-io-no-cookies-required.p.rapidapi.com/organization_details',
         params: { organization_id },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.APPOLLO_API_KEY,
             'x-rapidapi-host': 'apollo-io-no-cookies-required.p.rapidapi.com'
         }
     };

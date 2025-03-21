@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
+import { API_KEYS } from '../../../utils/apiKeys';
 
 const API_BASE_URL = 'https://api.hikerapi.com';
 
 export async function ig_profile_scraper(req: Request, res: Response) {
   const { url } = req.body;
-  const apiKey = req.headers['x-api-key'] as string;
+  
 
-  if (!apiKey || !url) {
+  if (!API_KEYS.INSTAGRAM_API_KEY || !url) {
     res.status(400).json({ error: 'API key and hashtag are required.' });
     return 
   }
@@ -17,7 +18,7 @@ export async function ig_profile_scraper(req: Request, res: Response) {
     const response = await axios.get(`${API_BASE_URL}/v1/user/by/url`, {
       params: { url },
       headers: {
-        'x-access-key': `${apiKey}`,
+        'x-access-key': `${API_KEYS.INSTAGRAM_API_KEY}`,
         'Content-Type': 'application/json',
       },
     });
@@ -53,9 +54,9 @@ export async function ig_profile_scraper(req: Request, res: Response) {
 
 export async function ig_followers_scraper(req: Request, res: Response) {
     const { id, cursor, limit } = req.body;
-    const apiKey = req.headers['x-api-key'] as string;
+    
   
-    if (!apiKey || !id) {
+    if (!API_KEYS.INSTAGRAM_API_KEY || !id) {
       res.status(400).json({ error: 'API key and hashtag are required.' });
       return 
     }
@@ -65,7 +66,7 @@ export async function ig_followers_scraper(req: Request, res: Response) {
       const response = await axios.get(`${API_BASE_URL}/v2/user/followers`, {
         params: { user_id:id, ...(cursor && {page_id:cursor}) },
         headers: {
-          'x-access-key': `${apiKey}`,
+          'x-access-key': `${API_KEYS.INSTAGRAM_API_KEY}`,
           'Content-Type': 'application/json',
         },
       });
@@ -101,9 +102,9 @@ export async function ig_followers_scraper(req: Request, res: Response) {
 
   export async function ig_following_scraper(req: Request, res: Response) {
     const { id, cursor, limit } = req.body;
-    const apiKey = req.headers['x-api-key'] as string;
+    
   
-    if (!apiKey || !id) {
+    if (!API_KEYS.INSTAGRAM_API_KEY || !id) {
       res.status(400).json({ error: 'API key and hashtag are required.' });
       return 
     }
@@ -113,7 +114,7 @@ export async function ig_followers_scraper(req: Request, res: Response) {
       const response = await axios.get(`${API_BASE_URL}/v2/user/following`, {
         params: { user_id:id, ...(cursor && {page_id:cursor}) },
         headers: {
-          'x-access-key': `${apiKey}`,
+          'x-access-key': `${API_KEYS.INSTAGRAM_API_KEY}`,
           'Content-Type': 'application/json',
         },
       });

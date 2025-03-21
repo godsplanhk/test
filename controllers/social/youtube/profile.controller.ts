@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { Request, Response } from "express";
 import { google } from 'googleapis';
+import { API_KEYS } from '../../../utils/apiKeys';
 
 export const yt_channel_details = async (req: Request, res: Response) => {
     const { url:channel } = req.body;
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!channel) {
         res.status(400).json({ error: "Please provide a channel ID" });
@@ -18,7 +19,7 @@ export const yt_channel_details = async (req: Request, res: Response) => {
             id: channel.includes("youtube.com")?channel:`https://www.youtube.com/@${channel}`,
         },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.YOUTUBE_API_KEY,
             'x-rapidapi-host': 'youtube138.p.rapidapi.com'
         }
     };
@@ -63,7 +64,7 @@ export const yt_subscriptions = async (req: Request, res: Response) => {
 
 export const yt_email_finder = async (req: Request, res: Response) => {
     const { channel_id } = req.body;
-    const apiKey = req.headers["x-api-key"] as string; // Using API key from request headers
+     // Using API key from request headers
 
     if (!channel_id) {
         res.status(400).json({ error: "Please provide a channel ID" });
@@ -74,7 +75,7 @@ export const yt_email_finder = async (req: Request, res: Response) => {
         method: 'GET',
         url: `https://youtube-email-finder.p.rapidapi.com/youtube/channel_id/${channel_id}`,
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.YOUTUBE_API_KEY,
             'x-rapidapi-host': 'youtube-email-finder.p.rapidapi.com'
         }
     };

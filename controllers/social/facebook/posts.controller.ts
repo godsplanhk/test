@@ -1,12 +1,13 @@
 import { ApifyClient } from "apify-client";
 import axios from "axios";
 import { Request, Response } from "express";
+import { API_KEYS } from "../../../utils/apiKeys";
 
 export const facebook_single_post_scraper = async (req:Request, res:Response) => {
     const postId = req.body.post_id;
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
-    if (!postId || !apiKey) {
+    if (!postId || !API_KEYS.FACEBOOK_API_KEY) {
         res.status(400).json({ error: 'post_id query parameter is required' });
         return 
     }
@@ -16,7 +17,7 @@ export const facebook_single_post_scraper = async (req:Request, res:Response) =>
         url: 'https://facebook-scraper3.p.rapidapi.com/post',
         params: { post_id: postId },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.FACEBOOK_API_KEY,
             'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
         }
     };
@@ -32,9 +33,9 @@ export const facebook_single_post_scraper = async (req:Request, res:Response) =>
 
 export const facebook_profile_posts_scraper = async (req:Request, res:Response) => {
     const {profile_id, cursor, start_date, end_date} = req.body;
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
-    if (!profile_id || !apiKey) {
+    if (!profile_id || !API_KEYS.FACEBOOK_API_KEY) {
         res.status(400).json({ error: 'post_id query parameter is required' });
         return 
     }
@@ -48,7 +49,7 @@ export const facebook_profile_posts_scraper = async (req:Request, res:Response) 
             ...(end_date && {end_date}),
         },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.FACEBOOK_API_KEY,
             'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
         }
     };
@@ -65,14 +66,13 @@ export const facebook_profile_posts_scraper = async (req:Request, res:Response) 
 export const facebook_likes_scraper = async (req: Request, res: Response) => {
     
     const {url,limit,} = req.body;
-    const apiKey = req.headers['x-api-key']
     
-    if (!url || !apiKey) {
+    if (!url || !API_KEYS.FACEBOOK_APIFY_API_KEY) {
         res.status(400).json({ error: 'Profile URL is required' });
         return;
     }
     const client = new ApifyClient({
-        token: apiKey as string,
+        token: API_KEYS.FACEBOOK_APIFY_API_KEY as string,
     });
 
     const input = {
@@ -91,7 +91,7 @@ export const facebook_likes_scraper = async (req: Request, res: Response) => {
 
 export const facebook_comments_scraper = async (req: Request, res: Response) => {
     const { id, limit, cursor } = req.body;
-    const apiKey = req.headers["x-api-key"] as string;
+    
 
     if (!id) {
         res.status(400).json({ "error": "Please provide the post_id" });
@@ -102,7 +102,7 @@ export const facebook_comments_scraper = async (req: Request, res: Response) => 
         url: 'https://facebook-scraper3.p.rapidapi.com/post/comments',
         params: {post_id:id, ...(cursor && {cursor})},
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.FACEBOOK_API_KEY,
             'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
         }
     };

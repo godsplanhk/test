@@ -1,17 +1,18 @@
 import axios from 'axios';
 import { Request, Response } from "express";
+import { API_KEYS } from '../../../utils/apiKeys';
 
 
 export const x_tweet = async (req: Request, res: Response) => {
     const { postId } = req.body; // Get Twitter post ID from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!postId) {
         res.status(400).json({ error: "Please provide a Twitter post ID" });
         return;
     }
 
-    if (!apiKey) {
+    if (!API_KEYS.TWITTER_API_KEY) {
         res.status(400).json({ error: "Please provide an API key" });
         return;
     }
@@ -21,7 +22,7 @@ export const x_tweet = async (req: Request, res: Response) => {
         url: 'https://twitter241.p.rapidapi.com/tweet',
         params: { pid: postId },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TWITTER_API_KEY,
             'x-rapidapi-host': 'twitter241.p.rapidapi.com'
         }
     };
@@ -39,14 +40,14 @@ export const x_tweet = async (req: Request, res: Response) => {
 
 export const x_retweets = async (req: Request, res: Response) => {
     const { postId, count, cursor } = req.body; // Get Twitter post ID from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!postId) {
         res.status(400).json({ error: "Please provide a Twitter post ID" });
         return;
     }
 
-    if (!apiKey) {
+    if (!API_KEYS.TWITTER_API_KEY) {
         res.status(400).json({ error: "Please provide an API key" });
         return;
     }
@@ -60,7 +61,7 @@ export const x_retweets = async (req: Request, res: Response) => {
           ...(cursor&&{cursor})
         },
         headers: {
-          'x-rapidapi-key': apiKey,
+          'x-rapidapi-key': API_KEYS.TWITTER_API_KEY,
           'x-rapidapi-host': 'twitter241.p.rapidapi.com'
         }
       };
@@ -78,14 +79,14 @@ export const x_retweets = async (req: Request, res: Response) => {
 
 export const x_comments_api = async (req: Request, res: Response) => {
     const { postId, count, cursor } = req.body; // Get Twitter post ID and count from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!postId) {
         res.status(400).json({ error: "Please provide a Twitter post ID" });
         return;
     }
 
-    if (!apiKey) {
+    if (!API_KEYS.TWITTER_API_KEY) {
         res.status(400).json({ error: "Please provide an API key" });
         return;
     }
@@ -100,7 +101,7 @@ export const x_comments_api = async (req: Request, res: Response) => {
             ...(cursor && {cursor})
         },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.TWITTER_API_KEY,
             'x-rapidapi-host': 'twitter241.p.rapidapi.com'
         }
     };

@@ -19,6 +19,7 @@ import { searchInfluencers } from "./controllers/social/influencer.controller";
 import EnrichmentRouter from "./routes/enrichement.routes";
 import IndeedRouter from "./routes/job/indeed.routes";
 import DatabaseRouter from "./routes/db/social.logs.routes";
+import authMiddleware from "./middleware/auth.middleware";
 
 dotenv.config();
 

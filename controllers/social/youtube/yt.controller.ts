@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { Request, Response } from "express";
+import { API_KEYS } from '../../../utils/apiKeys';
 
 export const yt_search_scraper = async (req: Request, res: Response) => {
     const { query, limit } = req.body; // Get search query from request
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!query) {
         res.status(400).json({ error: "Please provide a search query" });
@@ -19,7 +20,7 @@ export const yt_search_scraper = async (req: Request, res: Response) => {
             gl: 'US'
         },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.YOUTUBE_API_KEY,
             'x-rapidapi-host': 'youtube138.p.rapidapi.com'
         }
     };

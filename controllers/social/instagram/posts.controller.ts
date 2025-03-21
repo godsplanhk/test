@@ -1,14 +1,15 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { Request, Response } from 'express';
+import { API_KEYS } from '../../../utils/apiKeys';
 
 const API_BASE_URL = 'https://api.hikerapi.com';
 
 export async function ig_posts_scraper(req: Request, res: Response) {
   const { user_id, page_id } = req.body;
-  const apiKey = req.headers['x-api-key'] as string;
+  
 
-  if (!apiKey || !user_id) {
+  if (!API_KEYS.INSTAGRAM_API_KEY || !user_id) {
     res.status(400).json({ error: 'API key and user id are required.' });
     return 
   }
@@ -18,7 +19,7 @@ export async function ig_posts_scraper(req: Request, res: Response) {
     const response = await axios.get(`${API_BASE_URL}/v2/user/medias`, {
       params: { user_id, ...(page_id && {page_id}) },
       headers: {
-        'x-access-key': `${apiKey}`,
+        'x-access-key': `${API_KEYS.INSTAGRAM_API_KEY}`,
         'Content-Type': 'application/json',
       },
     });
@@ -69,9 +70,9 @@ export async function ig_posts_scraper(req: Request, res: Response) {
 
 export async function ig_post_scraper(req: Request, res: Response) {
     const { url } = req.body;
-    const apiKey = req.headers['x-api-key'] as string;
+    
   
-    if (!apiKey || !url) {
+    if (!API_KEYS.INSTAGRAM_API_KEY || !url) {
       res.status(400).json({ error: 'API key and hashtag are required.' });
       return 
     }
@@ -81,7 +82,7 @@ export async function ig_post_scraper(req: Request, res: Response) {
       const response = await axios.get(`${API_BASE_URL}/v2/media/info/by/url`, {
         params: { url },
         headers: {
-          'x-access-key': `${apiKey}`,
+          'x-access-key': `${API_KEYS.INSTAGRAM_API_KEY}`,
           'Content-Type': 'application/json',
         },
       });
@@ -128,9 +129,9 @@ export async function ig_post_scraper(req: Request, res: Response) {
 
   export async function ig_likes_scraper(req: Request, res: Response) {
     const { id, limit } = req.body;
-    const apiKey = req.headers['x-api-key'] as string;
+    
   
-    if (!apiKey || !id) {
+    if (!API_KEYS.INSTAGRAM_API_KEY || !id) {
       res.status(400).json({ error: 'API key and hashtag are required.' });
       return 
     }
@@ -140,7 +141,7 @@ export async function ig_post_scraper(req: Request, res: Response) {
       const response = await axios.get(`${API_BASE_URL}/v2/media/likers`, {
         params: { id },
         headers: {
-          'x-access-key': `${apiKey}`,
+          'x-access-key': `${API_KEYS.INSTAGRAM_API_KEY}`,
           'Content-Type': 'application/json',
         },
       });
@@ -177,9 +178,9 @@ export async function ig_post_scraper(req: Request, res: Response) {
   
   export async function ig_comment_scraper(req: Request, res: Response) {
     const { id, page_id, limit } = req.body;
-    const apiKey = req.headers['x-api-key'] as string;
+    
   
-    if (!apiKey || !id) {
+    if (!API_KEYS.INSTAGRAM_API_KEY || !id) {
       res.status(400).json({ error: 'API key and hashtag are required.' });
       return;
     }
@@ -189,7 +190,7 @@ export async function ig_post_scraper(req: Request, res: Response) {
       const response = await axios.get(`${API_BASE_URL}/v2/media/comments`, {
         params: { id, page_id },
         headers: {
-          'x-access-key': `${apiKey}`,
+          'x-access-key': `${API_KEYS.INSTAGRAM_API_KEY}`,
           'Content-Type': 'application/json',
         },
       });

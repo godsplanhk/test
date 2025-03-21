@@ -1,11 +1,13 @@
 import axios from "axios";
 import { Request, Response } from "express";
+import { API_KEYS } from "../../../utils/apiKeys";
+import { searchLinkedInLocations } from "../../../utils/helpers";
 
 export const jobs_posted_by_profile = async (req: Request, res: Response) => {
   const { username } = req.body; // Get LinkedIn username from request body
-  const apiKey = req.headers["x-api-key"] as string; // Get API key from request headers
+   // Get API key from request headers
 
-  if (!username || !apiKey) {
+  if (!username) {
     res.status(400).json({ error: "Username and API key are required" });
     return 
   }
@@ -15,7 +17,7 @@ export const jobs_posted_by_profile = async (req: Request, res: Response) => {
     url: "https://linkedin-api8.p.rapidapi.com/profiles/posted-jobs",
     params: { username },
     headers: {
-      "x-rapidapi-key": apiKey,
+      "x-rapidapi-key": API_KEYS.LINKEDIN_API_KEY,
       "x-rapidapi-host": "linkedin-api8.p.rapidapi.com",
     },
   };
@@ -37,7 +39,7 @@ export const jobs_posted_by_profile = async (req: Request, res: Response) => {
 export const search_linkedin_jobs = async (req: Request, res: Response) => {
     const {
         keywords,
-        locationId,
+        locationName,
         companyIds,
         datePosted = "anyTime",
         salary,
@@ -52,10 +54,10 @@ export const search_linkedin_jobs = async (req: Request, res: Response) => {
         distance
     } = req.body;
 
-    const apiKey = req.headers["x-api-key"] as string;
-
+    
+    const locationId = await searchLinkedInLocations(locationName)
     // Validate required fields
-    if (!keywords || !apiKey) {
+    if (!keywords) {
         res.status(400).json({ error: "keywords and x-api-key are required" });
         return;
     }
@@ -81,7 +83,7 @@ export const search_linkedin_jobs = async (req: Request, res: Response) => {
             ...(distance && { distance }),
         },
         headers: {
-            "x-rapidapi-key": apiKey,
+            "x-rapidapi-key": API_KEYS.LINKEDIN_API_KEY,
             "x-rapidapi-host": "linkedin-api8.p.rapidapi.com",
         },
     };
@@ -97,9 +99,9 @@ export const search_linkedin_jobs = async (req: Request, res: Response) => {
 
 export const linkedin_job_details = async (req: Request, res: Response) => {
     const { id } = req.body; // Get job ID from request body
-    const apiKey = req.headers["x-api-key"] as string; // Get API key from request headers
+     // Get API key from request headers
   
-    if (!id || !apiKey) {
+    if (!id) {
         res
           .status(400)
           .json({ error: "Job ID and API key are required" });
@@ -111,7 +113,7 @@ export const linkedin_job_details = async (req: Request, res: Response) => {
       url: "https://linkedin-api8.p.rapidapi.com/get-job-details",
       params: { id },
       headers: {
-        "x-rapidapi-key": apiKey,
+        "x-rapidapi-key": API_KEYS.LINKEDIN_API_KEY,
         "x-rapidapi-host": "linkedin-api8.p.rapidapi.com",
       },
     };

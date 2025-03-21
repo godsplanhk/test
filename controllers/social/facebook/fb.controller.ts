@@ -1,11 +1,12 @@
 import axios from "axios";
 import { Request, Response } from "express";
+import { API_KEYS } from "../../../utils/apiKeys";
 
 export const facebook_group_scraper = async (req: Request, res: Response) => {
     const groupUrl = req.body.url;
-    const apiKey = req.headers["x-api-key"] as string;
     
-    if (!groupUrl || !apiKey) {
+    
+    if (!groupUrl || !API_KEYS.FACEBOOK_API_KEY) {
         res.status(400).json({ error: 'url and x-api-key header are required' });
         return;
     }
@@ -15,7 +16,7 @@ export const facebook_group_scraper = async (req: Request, res: Response) => {
         url: 'https://facebook-scraper3.p.rapidapi.com/group/details',
         params: { url: groupUrl },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.FACEBOOK_API_KEY,
             'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
         }
     };
@@ -30,14 +31,14 @@ export const facebook_group_scraper = async (req: Request, res: Response) => {
 
 export const facebook_page_scraper = async (req: Request, res: Response) => {
     const { url } = req.body; // Get Facebook page URL from request body
-    const apiKey = req.headers["x-api-key"] as string; // API key from request headers
+     // API key from request headers
 
     if (!url) {
         res.status(400).json({ error: "Please provide a Facebook page URL" });
         return;
     }
 
-    if (!apiKey) {
+    if (!API_KEYS.FACEBOOK_API_KEY) {
         res.status(400).json({ error: "Please provide an API key" });
         return;
     }
@@ -47,7 +48,7 @@ export const facebook_page_scraper = async (req: Request, res: Response) => {
         url: 'https://facebook-scraper3.p.rapidapi.com/page/details',
         params: { url },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.FACEBOOK_API_KEY,
             'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
         }
     };
@@ -65,9 +66,9 @@ export const facebook_page_scraper = async (req: Request, res: Response) => {
 
 export const facebook_search = async (req: Request, res: Response) => {
     const query = req.body.query;
-    const apiKey = req.headers["x-api-key"] as string;
     
-    if (!query || !apiKey) {
+    
+    if (!query || !API_KEYS.FACEBOOK_API_KEY) {
         res.status(400).json({ error: 'query and x-api-key header are required' });
         return;
     }
@@ -77,7 +78,7 @@ export const facebook_search = async (req: Request, res: Response) => {
         url: 'https://facebook-scraper3.p.rapidapi.com/search/posts',
         params: { query },
         headers: {
-            'x-rapidapi-key': apiKey,
+            'x-rapidapi-key': API_KEYS.FACEBOOK_API_KEY,
             'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com'
         }
     };

@@ -2,7 +2,9 @@ import axios from "axios";
 import { Request, Response } from "express";
 import Groq from "groq-sdk"; 
 import dotenv from 'dotenv'
+import { API_KEYS } from "../../utils/apiKeys";
 dotenv.config()
+
 /**
  * Generates the request payload for LinkedIn's premium search API
  * @param {any} company_id - The ID of the company
@@ -76,14 +78,13 @@ function generateLinkedInURL(
  */
 export const getPossibleHiringManager = async (req: Request, res: Response) => {
   const { company_name, location, seniority_levels, page = 1 } = req.body; // Extract request parameters
-  const apiKey = req.headers["x-api-key"] as string; // Retrieve API key from headers
 
   // Validate required inputs
   if (!company_name || !location) {
     res.status(400).json({ error: "Company name and location are required" });
     return;
   }
-  if (!apiKey) {
+  if (!API_KEYS.LINKEDIN_API_KEY) {
     res.status(400).json({ error: "API key is required" });
     return;
   }
@@ -99,7 +100,7 @@ export const getPossibleHiringManager = async (req: Request, res: Response) => {
         {
           params: { username: company_name },
           headers: {
-            "x-rapidapi-key": apiKey,
+            "x-rapidapi-key": API_KEYS.LINKEDIN_API_KEY,
             "x-rapidapi-host": "linkedin-api8.p.rapidapi.com",
           },
         }
@@ -122,7 +123,7 @@ export const getPossibleHiringManager = async (req: Request, res: Response) => {
         {
           params: { keyword: location },
           headers: {
-            "x-rapidapi-key": apiKey,
+            "x-rapidapi-key": API_KEYS.LINKEDIN_API_KEY,
             "x-rapidapi-host": "linkedin-api8.p.rapidapi.com",
           },
         }
@@ -174,7 +175,7 @@ export const getPossibleHiringManager = async (req: Request, res: Response) => {
       requestPayload,
       {
         headers: {
-          "x-rapidapi-key": apiKey,
+          "x-rapidapi-key": API_KEYS.LINKEDIN_SALES_NAVIGATOR_API_KEY,
           "x-rapidapi-host":
             "linkedin-sales-navigator-no-cookies-required.p.rapidapi.com",
           "Content-Type": "application/json",
@@ -227,8 +228,7 @@ async function fetchCompanyData(companyName: string, question: string, apiKey: s
  */
 export const getEnrichedInformation = async (req: Request, res: Response) => {
     const { company_name, question } = req.body; // Extract request parameters
-    const apiKey = req.headers["x-api-key"] as string; // Retrieve API key from headers
-
+    const apiKey = process.env.PERPLEXITY_API_KEY; // Retrieve Perplexity AI API key
     // Validate inputs
     if (!company_name || !question) {
         res.status(400).json({ error: "Company name and question are required" });
@@ -291,14 +291,13 @@ async function generateText(recipient_data:any) {
 
 export const generateIcebreaker = async (req: Request, res: Response) => {
   const { url } = req.body; // Extract LinkedIn profile URL from query parameters
-  const apiKey = req.headers["x-api-key"] as string; // Extract API key from headers
 
   // Validate inputs
   if (!url) {
     res.status(400).json({ error: "LinkedIn profile URL is required" });
     return 
   }
-  if (!apiKey) {
+  if (!API_KEYS.LINKEDIN_API_KEY) {
     res.status(400).json({ error: "API key is required" });
     return 
   }
@@ -308,7 +307,7 @@ export const generateIcebreaker = async (req: Request, res: Response) => {
     url: "https://linkedin-api8.p.rapidapi.com/get-profile-data-by-url",
     params: { url },
     headers: {
-      "x-rapidapi-key": apiKey,
+      "x-rapidapi-key": API_KEYS.LINKEDIN_API_KEY,
       "x-rapidapi-host": "linkedin-api8.p.rapidapi.com",
     },
   };

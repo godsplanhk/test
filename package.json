@@ -25,6 +25,7 @@
     "@prisma/client": "^6.4.1",
     "@types/compression": "^1.7.5",
     "@types/jsdom": "^21.1.7",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/morgan": "^1.9.9",
     "apify-client": "^2.12.0",
     "axios": "^1.7.9",
@@ -39,6 +40,7 @@
     "groq-sdk": "^0.15.0",
     "helmet": "^8.0.0",
     "jsdom": "^26.0.0",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "pg": "^8.13.3",
     "uuid": "^11.1.0"
