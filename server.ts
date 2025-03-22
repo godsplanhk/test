@@ -26,20 +26,19 @@ dotenv.config();
   const app = express();
 
   // Middlewares
-  app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
-    allowedHeaders: ['Content-Type'] ,
-    credentials:true,
-    preflightContinue:false,
-    optionsSuccessStatus:204
-  }));
+  const corsOptions ={
+    origin:"*",
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+  }
+  app.options('', cors()) // include before other routes
+  app.use(cors(corsOptions));
+
   app.use(helmet());
   app.use(compression());
   app.use(express.urlencoded({ extended: true, limit: "50mb" }));
   app.use(express.json({ limit: "50mb" }));
   app.use(morgan("combined"));
-  app.options("*", cors());
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
