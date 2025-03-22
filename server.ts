@@ -24,6 +24,8 @@ import JobSearch from "./routes/job/jobsearch.routes";
 dotenv.config();
 
   const app = express();
+  app.set('trust proxy', 1); // 1 means trusting the first proxy, if using multiple proxies, you can adjust accordingly.
+
 
   // Middlewares
   const corsOptions ={
