@@ -26,7 +26,11 @@ dotenv.config();
   const app = express();
 
   // Middlewares
-  app.use(cors());
+  app.use(cors({
+    origin: '*',
+    methods: ['POST', 'OPTIONS'], 
+    allowedHeaders: ['Content-Type'] 
+  }));
   app.use(helmet());
   app.use(compression());
   app.use(express.urlencoded({ extended: true, limit: "50mb" }));
