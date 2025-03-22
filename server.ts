@@ -28,7 +28,7 @@ dotenv.config();
   // Middlewares
   app.use(cors({
     origin: '*',
-    methods: ['POST', 'OPTIONS'], 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
     allowedHeaders: ['Content-Type'] 
   }));
   app.use(helmet());
@@ -36,7 +36,7 @@ dotenv.config();
   app.use(express.urlencoded({ extended: true, limit: "50mb" }));
   app.use(express.json({ limit: "50mb" }));
   app.use(morgan("combined"));
-
+  app.options("*", cors());
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
