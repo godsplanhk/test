@@ -31,7 +31,7 @@ dotenv.config();
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
   }
-  app.options('', cors()) // include before other routes
+  app.options('*', cors()) // include before other routes
   app.use(cors(corsOptions));
 
   app.use(helmet());
