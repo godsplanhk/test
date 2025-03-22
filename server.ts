@@ -29,7 +29,10 @@ dotenv.config();
   app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
-    allowedHeaders: ['Content-Type'] 
+    allowedHeaders: ['Content-Type'] ,
+    credentials:true,
+    preflightContinue:false,
+    optionsSuccessStatus:204
   }));
   app.use(helmet());
   app.use(compression());
