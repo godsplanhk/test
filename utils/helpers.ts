@@ -45,3 +45,14 @@ export const convertTimestampToDate = (timestamp: number): string => {
       return false
     }
   };
+
+
+  export function convertTimestamp(timestamp:number) {
+    // Convert timestamp from seconds to milliseconds by multiplying by 1000
+    const date = new Date(timestamp * 1000);
+    
+    // Format the date as 'YYYY-MM-DD HH:MM:SS'
+    const formattedDate = date.toISOString().replace('T', ' ').slice(0, 19);
+    
+    return formattedDate;
+}
