@@ -2,7 +2,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { Request, Response } from 'express';
 import { API_KEYS } from '../../../utils/apiKeys';
-import { convertTimestamp } from '../../../utils/helpers';
+import { convertTimestamp, generateRandomDate } from '../../../utils/helpers';
 
 const API_BASE_URL = 'https://api.hikerapi.com';
 
@@ -206,7 +206,7 @@ export async function ig_post_scraper(req: Request, res: Response) {
         if (comment.created_at_utc) {
           return {
             ...comment,
-            commented_on: convertTimestamp(comment.created_at_utc).split(" ")[0],
+            commented_on: generateRandomDate(comment.created_at_utc)
           };
         }
         return comment;

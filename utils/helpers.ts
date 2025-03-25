@@ -47,12 +47,16 @@ export const convertTimestampToDate = (timestamp: number): string => {
   };
 
 
-  export function convertTimestamp(timestamp:number) {
-    // Convert timestamp from seconds to milliseconds by multiplying by 1000
-    const date = new Date(timestamp * 1000);
-    
-    // Format the date as 'YYYY-MM-DD HH:MM:SS'
-    const formattedDate = date.toISOString().replace('T', ' ').slice(0, 19);
-    
-    return formattedDate;
+
+export function convertTimestamp(timestamp: number): string {
+  const date = new Date(timestamp * 1000);
+  return date.toISOString().split('T')[0];
+}
+
+// Function to generate a random date greater than or equal to a given timestamp
+export function generateRandomDate(timestamp: number): string {
+  const minDate = new Date(timestamp * 1000);
+  const maxDate = new Date(); // Current date
+  const randomDate = new Date(minDate.getTime() + Math.random() * (maxDate.getTime() - minDate.getTime()));
+  return randomDate.toISOString().split('T')[0];
 }
