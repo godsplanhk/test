@@ -130,6 +130,36 @@ export const getPossibleHiringManager = async (req: Request, res: Response) => {
 };
 
 
+export const getJobHiringTeam= async(req:Request, res:Response)=>{
+  const {job_id, job_url} = req.body
+  if(!job_url || !job_id){
+    res.status(400).json({error:"Either provide job url or job id"})
+    return
+  }
+
+  try{
+    const options = {
+      method: 'GET',
+      url: 'https://linkedin-api8.p.rapidapi.com/get-hiring-team',
+      params: {
+        id: '3903094332',
+        url: 'https://www.linkedin.com/jobs/view/3903094332/'
+      },
+      headers: {
+        'x-rapidapi-key': API_KEYS.LINKEDIN_API_KEY,
+        'x-rapidapi-host': 'linkedin-api8.p.rapidapi.com'
+      }
+    };
+
+    const response = await axios.request(options);
+	  res.status(200).json({data:response.data.data.items})
+  }
+  catch{
+    res.status(500).json({error:"An unexpected error occured."})
+  }
+}
+
+
 /**
  * Express route handler to enrich company data based on a user's question.
  */

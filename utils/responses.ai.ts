@@ -185,4 +185,4 @@ Now read the user's input and return a valid JSON response only.
 
 
 
-askAI("Give me hundred users who may be interested in fireplaces on FB Groups.","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")
+askAI("Give me hundred users who may be interested in fireplaces on Tiktok.","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")
