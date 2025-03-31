@@ -60,3 +60,71 @@ export function generateRandomDate(timestamp: number): string {
   const randomDate = new Date(minDate.getTime() + Math.random() * (maxDate.getTime() - minDate.getTime()));
   return randomDate.toISOString().split('T')[0];
 }
+
+/**
+ * Generates the request payload for LinkedIn's premium search API
+ * @param {any} company_id - The ID of the company
+ * @param {any} company_name - The name of the company
+ * @param {any} [location_id=null] - The ID of the location (optional)
+ * @param {any} [location_name=null] - The name of the location (optional)
+ * @param {string[]} [seniority_levels=[]] - Array of seniority levels (optional)
+ * @param {string} [keyword="job"] - Search keyword (default: "job")
+ * @param {number} [page=1] - Page number (default: 1)
+ * @returns {Object} - The request payload
+ */
+export function generateLinkedInURL(
+  company_id: any,
+  company_name: any,
+  location_id: any = null,
+  location_name: any = null,
+  seniority_levels: string[] = [],
+  keyword: string = "job",
+  page: number = 1
+): object {
+  const filters = [
+    {
+      type: "CURRENT_COMPANY",
+      values: [
+        {
+          id: `urn:li:organization:${company_id}`,
+          text: company_name,
+          selectionType: "INCLUDED",
+        },
+      ],
+    },
+  ];
+
+  // Add location filter if provided
+  if (location_id && location_name) {
+    filters.push({
+      type: "GEO_REGION",
+      values: [
+        {
+          id: `urn:li:geo:${location_id}`,
+          text: location_name,
+          selectionType: "INCLUDED",
+        },
+      ],
+    });
+  }
+
+  if (seniority_levels && seniority_levels.length > 0) {
+    const seniorityValues = seniority_levels.map((level) => {
+      return {
+        text: level,
+        selectionType: "INCLUDED",
+      };
+    });
+
+    filters.push({
+      type: "SENIORITY_LEVEL",
+      values: seniorityValues as any,
+    });
+  }
+
+  return {
+    account_number: 1,
+    page,
+    filters,
+  };
+}

@@ -33,7 +33,8 @@ export const API_KEYS = {
     TIKTOK_API_KEY: getApiKeysArray('TIKTOK_API'),
     INFLUENCER_API_KEY: getApiKeysArray('INFLUENCER_API'),
     MAPS_API_KEY: getApiKeysArray('MAPS_API'),
-    JOB_SEARCH_API_KEY: getApiKeysArray('JOB_SEARCH_API')
+    JOB_SEARCH_API_KEY: getApiKeysArray('JOB_SEARCH_API'),
+    MTN_LINKEDIN_API_KEY: getApiKeysArray('MTN_LINKEDIN_API')
   },
 
   
@@ -96,5 +97,9 @@ export const API_KEYS = {
 
   get JOB_SEARCH_API_KEY() {
     return getRandomItem(this._keyArrays.JOB_SEARCH_API_KEY);
+  },
+
+  get MTN_LINKEDIN_API_KEY(){
+    return getRandomItem(this._keyArrays.MTN_LINKEDIN_API_KEY)
   }
 };
