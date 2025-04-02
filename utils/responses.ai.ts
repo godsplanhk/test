@@ -61,9 +61,149 @@ export async function generateIcebreakerFunction(recipient_data:any, apiKey:stri
         return undefined;
     }
 }
+const systemPrompt = `
+You are an advanced social media scraping assistant. Your job is to analyze the user's request and:
+1. Determine primary and related scrapers that could be valuable
+2. Sort them by relevance score (0.0 to 1.0)
+3. Generate the exact body parameters needed for each scraper
+4. Suggest related data collection opportunities
 
+Return your response in this exact JSON format:
 
-export async function askAI(prompt:string, apiKey:string){
+{
+  "selected_scrapers": [
+    {
+      "scraper_type": string,
+      "relevance_score": number, // 0.0 to 1.0, where 1.0 is most relevant
+      "reason": string,
+      "category": "primary" | "suggestion",
+      "body": {
+        // parameters specific to the scraper type
+      }
+    }
+  ],
+  "user_prompts": [ // only if needed
+    {
+      "field": string,
+      "scraper_type": string,
+      "description": string
+    }
+  ]
+}
+
+Example 1:
+Input: "Find influencers posting about fitness on Instagram"
+
+{
+  "selected_scrapers": [
+    {
+      "scraper_type": "instagram-hashtags",
+      "relevance_score": 1.0,
+      "reason": "Primary search to find trending fitness content and creators",
+      "category": "primary",
+      "body": {
+        "hashtag": "fitness",
+        "count": 100
+      }
+    },
+    {
+      "scraper_type": "instagram-profile",
+      "relevance_score": 0.8,
+      "reason": "Analyze profiles of discovered fitness influencers",
+      "category": "suggestion",
+      "body": {
+        "username": "prompt"
+      }
+    },
+    {
+      "scraper_type": "instagram-followers",
+      "relevance_score": 0.6,
+      "reason": "Analyze follower base of discovered fitness influencers",
+      "category": "suggestion",
+      "body": {
+        "username": "prompt",
+        "count": 1000
+      }
+    }
+  ],
+  "user_prompts": [
+    {
+      "field": "username",
+      "scraper_type": "instagram-profile",
+      "description": "Enter username of fitness influencer to analyze"
+    }
+  ]
+}
+
+Example 2:
+Input: "Research engagement on MrBeast's latest YouTube video"
+
+{
+  "selected_scrapers": [
+    {
+      "scraper_type": "youtube-videos",
+      "relevance_score": 1.0,
+      "reason": "Get latest video data from MrBeast's channel",
+      "category": "primary",
+      "body": {
+        "channel_url": "prompt",
+        "count": 1
+      }
+    },
+    {
+      "scraper_type": "youtube-comments",
+      "relevance_score": 0.9,
+      "reason": "Analyze audience engagement through comments",
+      "category": "primary",
+      "body": {
+        "video_url": "prompt",
+        "count": 500
+      }
+    },
+    {
+      "scraper_type": "youtube-channel",
+      "relevance_score": 0.7,
+      "reason": "Get overall channel statistics and context",
+      "category": "suggestion",
+      "body": {
+        "channel_url": "prompt"
+      }
+    }
+  ],
+  "user_prompts": [
+    {
+      "field": "channel_url",
+      "scraper_type": "youtube-videos",
+      "description": "Please provide MrBeast's YouTube channel URL"
+    },
+    {
+      "field": "video_url",
+      "scraper_type": "youtube-comments",
+      "description": "Please provide the specific video URL for comment analysis"
+    }
+  ]
+}
+
+Rules:
+1. Always include at least one primary scraper (relevance_score = 1.0)
+2. Include 2-4 relevant suggestions with decreasing relevance scores
+3. Sort scrapers by relevance_score in descending order
+4. Mark any missing required parameters as "prompt"
+5. Add corresponding entry in user_prompts array for each "prompt" value
+6. Use reasonable default values for optional parameters
+7. Provide clear reasoning for each scraper's inclusion
+8. Consider cross-platform suggestions when relevant
+
+Valid scraper types remain the same as before:
+- Instagram: "instagram-post", "instagram-profile", "instagram-followers", "instagram-comments", "instagram-likes", "instagram-hashtags"
+- Facebook: "facebook-post", "facebook-profile", "facebook-comments", "facebook-group", "facebook-followers"
+- X.com: "x-tweet", "x-comments", "x-followers", "x-hashtags", "x-profile"
+- TikTok: "tiktok-video", "tiktok-profile", "tiktok-followers", "tiktok-comments", "tiktok-hashtag", "tiktok-following"
+- YouTube: "youtube-videos", "youtube-comments", "youtube-channel"
+
+Now process the user's input and return the appropriate JSON response with primary and suggested scrapers. Donot append anything before and after thejson`
+
+export async function askAI(prompt:string, apiKey:string="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"){
     
     try {
         const options = {
@@ -72,103 +212,7 @@ export async function askAI(prompt:string, apiKey:string){
             body: JSON.stringify({
                 model: "sonar",
                 messages: [
-                    { role: "system", content: `
-                            You are a strict data extraction assistant.
-
-Your only job is to read the user's natural language input and return a valid JSON array describing the intent and its parameters.
-
-❗ You must never generate content, examples, personas, insights, or explanations. Only extract and return JSON based on exactly what the user said. No guessing or expanding.
-
--------------------------------------
-✅ JSON STRUCTURE
-
-[
-  {
-    "type": "SOCIAL MEDIA" | "JOB PLATFORM" | "DATABASE" | "ENRICH PERSONAL DATA" | "ENRICH COMPANY DATA",
-    "platform": "INSTAGRAM" | "FACEBOOK" | "TIKTOK" | "TWITTER" | "YOUTUBE",  // required ONLY for SOCIAL MEDIA
-    "intent": string, // required for SOCIAL MEDIA and DATABASE
-    "parameters": {
-      "filters": {
-        // keys vary by type (see below)
-      }
-    }
-  }
-]
-
--------------------------------------
-📱 SOCIAL MEDIA
-
-- Required: type = "SOCIAL MEDIA"
-- Required: platform from: INSTAGRAM, FACEBOOK, TIKTOK, TWITTER, YOUTUBE
-- Required: intent must be one of:
-
-  - **INSTAGRAM**: HASHTAG, POSTS, POST, LIKES, COMMENTS, PROFILE, FOLLOWERS, FOLLOWING  
-  - **FACEBOOK**: GROUP, PAGE, SEARCH POSTS, POST, POSTS, LIKES, COMMENTS, PROFILE, FOLLOWER, FOLLOWING  
-  - **TIKTOK**: PROFILE, FOLLOWER, FOLLOWING, HASHTAG, EMAIL, VIDEO, VIDEOS, COMMENTS  
-  - **TWITTER**: PROFILE, FOLLOWER, FOLLOWING, TWEET, RETWEETS, COMMENTS  
-  - **YOUTUBE**: CHANNEL, EMAIL, VIDEO, VIDEOS, COMMENTS, SEARCH
-
-Allowed filters for SOCIAL MEDIA:
-- username
-- hashtag
-- query
-- url
-- count
-- start_date (YYYY-MM-DD)
-- end_date (YYYY-MM-DD)
-
--------------------------------------
-💼 JOB PLATFORM
-
-- Required: type = "JOB PLATFORM"
-
-Allowed filters:
-- searchTerm
-- location
-- resultsWanted
-- distance
-- jobType
-- isRemote
-- hoursOld
-- platform
-
-Do not include intent or platform fields outside filters.
-
--------------------------------------
-📊 DATABASE
-
-- Required: type = "DATABASE"
-- Required: intent = "COMPANY" or "PEOPLE"
-
-Allowed filters for COMPANY:
-- company_name
-- company_num_employees
-- company_locations
-- zip_code
-- search_radius
-- url
-
-Allowed filters for PEOPLE:
-- person_name
-- person_title
-- person_past_title
-- person_locations
-
--------------------------------------
-📌 RULES
-
-- ❌ Do not write paragraphs, descriptions, examples, or hypothetical users.
-- ✅ Only return a valid JSON array of objects as described above.
-- ❌ Do not infer or assume values not explicitly mentioned.
-- ✅ Only include fields and values that are directly stated by the user.
-- ✅ If the prompt is vague, extract only what is clearly present and leave out anything else.
-- ❌ Never generate made-up data or suggestions.
-
-Now read the user's input and return a valid JSON response only.
-
-
-
-                        ` },
+                    { role: "system", content: systemPrompt },
                     { role: "user", content: prompt }
                 ]
             })
@@ -176,6 +220,7 @@ Now read the user's input and return a valid JSON response only.
 
         const response = await fetch('https://api.perplexity.ai/chat/completions', options);
         const data = await response.json();
+        console.log(data.choices[0].message.content.replace(/```json|```/g, '').trim());
         return JSON.parse(data.choices[0].message.content.replace(/```json|```/g, '').trim())
     } catch (error) {
         console.error("Error fetching company data:", error);
@@ -185,4 +230,4 @@ Now read the user's input and return a valid JSON response only.
 
 
 
-askAI("Give me hundred users who may be interested in fireplaces on Tiktok.","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")
+// askAI("Give me hundred users who may be interested in fireplaces on Tiktok.", "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").then(console.log).catch(console.error);
