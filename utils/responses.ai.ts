@@ -67,6 +67,44 @@ You are an advanced social media scraping assistant. Your job is to analyze the 
 2. Sort them by relevance score (0.0 to 1.0)
 3. Generate the exact body parameters needed for each scraper
 4. Suggest related data collection opportunities
+5. If no count is given, set it to 10
+
+Valid scraper types and their required body parameters:
+
+INSTAGRAM SCRAPERS:
+- instagram-post: { "url": string }
+- instagram-profile: { "username": string }
+- instagram-followers: { "username": string, "count": number }
+- instagram-comments: { "url": string, "count": number }
+- instagram-likes: { "url": string, "count": number }
+- instagram-hashtags: { "hashtag": string, "count": number }
+
+FACEBOOK SCRAPERS:
+- facebook-post: { "url": string }
+- facebook-profile: { "username": string }
+- facebook-comments: { "url": string, "count": number }
+- facebook-group: { "url": string, "count": number }
+- facebook-followers: { "username": string, "count": number }
+
+X.COM SCRAPERS:
+- x-tweet: { "url": string }
+- x-comments: { "url": string, "count": number }
+- x-followers: { "username": string, "count": number }
+- x-hashtags: { "query": string, "count": number }
+- x-profile: { "username": string }
+
+TIKTOK SCRAPERS:
+- tiktok-video: { "url": string }
+- tiktok-profile: { "username": string }
+- tiktok-followers: { "username": string, "count": number }
+- tiktok-comments: { "url": string, "count": number }
+- tiktok-hashtag: { "hashtag": string, "count": number }
+- tiktok-following: { "username": string, "count": number }
+
+YOUTUBE SCRAPERS:
+- youtube-videos: { "channel_url": string, "count": number }
+- youtube-comments: { "video_url": string, "count": number }
+- youtube-channel: { "channel_url": string }
 
 Return your response in this exact JSON format:
 
@@ -78,7 +116,7 @@ Return your response in this exact JSON format:
       "reason": string,
       "category": "primary" | "suggestion",
       "body": {
-        // parameters specific to the scraper type
+        // parameters specific to the scraper type as defined above
       }
     }
   ],
@@ -193,16 +231,9 @@ Rules:
 6. Use reasonable default values for optional parameters
 7. Provide clear reasoning for each scraper's inclusion
 8. Consider cross-platform suggestions when relevant
+9. Ensure all body parameters match the required format for each scraper type
 
-Valid scraper types remain the same as before:
-- Instagram: "instagram-post", "instagram-profile", "instagram-followers", "instagram-comments", "instagram-likes", "instagram-hashtags"
-- Facebook: "facebook-post", "facebook-profile", "facebook-comments", "facebook-group", "facebook-followers"
-- X.com: "x-tweet", "x-comments", "x-followers", "x-hashtags", "x-profile"
-- TikTok: "tiktok-video", "tiktok-profile", "tiktok-followers", "tiktok-comments", "tiktok-hashtag", "tiktok-following"
-- YouTube: "youtube-videos", "youtube-comments", "youtube-channel"
-
-Now process the user's input and return the appropriate JSON response with primary and suggested scrapers. Donot append anything before and after thejson`
-
+Now process the user's input and return the appropriate JSON response with primary and suggested scrapers. Do not append anything before and after the json`
 export async function askAI(prompt:string, apiKey:string="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"){
     
     try {
@@ -230,4 +261,4 @@ export async function askAI(prompt:string, apiKey:string="pplx-87aee1c87c42dfcda
 
 
 
-// askAI("Give me hundred users who may be interested in fireplaces on Tiktok.", "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").then(console.log).catch(console.error);
+askAI("Give 10 leads interested in sleep", "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").then(console.debug).catch(console.error);
