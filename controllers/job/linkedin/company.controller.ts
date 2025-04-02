@@ -15,11 +15,11 @@ export const getCompanyDetails = async (req: Request, res: Response) => {
 
   const options = {
     method: "GET",
-    url: "https://linkedin-api8.p.rapidapi.com/get-company-details",
-    params: { username: name as string },
+    url: "https://mtn-linkedin-scraperx-api.p.rapidapi.com/api/sales-nav/search-company-profile",
+    params: { company: name as string },
     headers: {
-      "x-rapidapi-key": API_KEYS.LINKEDIN_API_KEY,
-      "x-rapidapi-host": "linkedin-api8.p.rapidapi.com",
+      "x-rapidapi-key": API_KEYS.MTN_LINKEDIN_API_KEY,
+      "x-rapidapi-host": "mtn-linkedin-scraperx-api.p.rapidapi.com",
     },
   };
 

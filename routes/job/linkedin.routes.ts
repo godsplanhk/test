@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { searchPeopleSalesNavigator, searchCompaniesSalesNavigator } from "../../controllers/job/linkedin/sales-nav/url.controller";
+import { searchPeopleSalesNavigator, searchCompaniesSalesNavigator, getCompanyDetailsSales, getEmployeeDetailsSales } from "../../controllers/job/linkedin/sales-nav/nav.controller";
 import { jobs_posted_by_profile, linkedin_job_details, search_linkedin_jobs } from "../../controllers/job/linkedin/jobs.controller";
 import { getHiringTeam, getCompanyDetails, getCompanyByDomain } from "../../controllers/job/linkedin/company.controller";
 import {  getLinkedInEmail, getLinkedInProfile } from "../../controllers/job/linkedin/linkedin.controller";
@@ -17,7 +17,9 @@ LinkedinRouter.post("/company", getCompanyDetails)
 LinkedinRouter.post("/company-domain", getCompanyByDomain)
 LinkedinRouter.post("/profile", getLinkedInProfile)
 
-LinkedinRouter.post("/sales-navigator/people-url", searchPeopleSalesNavigator)
-LinkedinRouter.post("/sales-navigator/company-url", searchCompaniesSalesNavigator)
+LinkedinRouter.post("/sales-navigator/people", searchPeopleSalesNavigator)
+LinkedinRouter.post("/sales-navigator/company", searchCompaniesSalesNavigator)
+LinkedinRouter.post("/sales-navigator/company-details", getCompanyDetailsSales)
+LinkedinRouter.post("/sales-navigator/employee-details", getEmployeeDetailsSales)
 
 export default LinkedinRouter

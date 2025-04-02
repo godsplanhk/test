@@ -20,10 +20,13 @@ import EnrichmentRouter from "./routes/enrichement.routes";
 import DatabaseRouter from "./routes/db/social.logs.routes";
 import authMiddleware from "./middleware/auth.middleware";
 import JobSearch from "./routes/job/jobsearch.routes";
+import OtherRouter from "./routes/other.routes";
 
 dotenv.config();
 
   const app = express();
+  app.set('trust proxy', 1); // 1 means trusting the first proxy, if using multiple proxies, you can adjust accordingly.
+
 
   // Middlewares
   const corsOptions ={
@@ -65,6 +68,8 @@ dotenv.config();
 
   // Influencer API
   app.post("/influencerSearch", authMiddleware, searchInfluencers);
+  
+  app.use("/ai", OtherRouter)
 
   const PORT = process.env.PORT || 5300;
   app.listen(PORT);
