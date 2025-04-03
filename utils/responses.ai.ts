@@ -76,38 +76,27 @@ Valid scraper types and their required body parameters:
 INSTAGRAM SCRAPERS:
 - instagram-post: { "url": string }
 - instagram-profile: { "url": string }
-- instagram-followers: { "id": string, "cursor": string, "limit": number }
-- instagram-comments: { "id": string, "limit": number }
-- instagram-likes: { "id": string, "limit": number }
 - instagram-hashtags: { "hashtag": string, "limit": number }
 
 FACEBOOK SCRAPERS:
-- facebook-post: { "post_id": string }
 - facebook-profile: { "url": string }
 - facebook-comments: { "url": string, "limit": number }
 - facebook-group: { "url": string }
 - facebook-followers: { "url": string, "limit": number, "type": string }
+- facebook-search: { "query": string }
 
 X.COM SCRAPERS:
-- x-tweet: { "postId": string }
-- x-comments: { "postId": string, "count": number, "cursor": string }
 - x-followers: { "username": string, "count": number }
 - x-hashtags: { "query": string, "count": number }
 - x-profile: { "username": string }
 
 TIKTOK SCRAPERS:
-- tiktok-video: { "videoId": string }
 - tiktok-profile: { "username": string }
-- tiktok-followers: { "id": string, "count": string, "cursor": string }
-- tiktok-comments: { "videoId": string, "count": string, "cursor": string }
 - tiktok-hashtag: { "hashtag": string, "count": string, "cursor": string }
-- tiktok-following: { "id": string, "count": string, "cursor": string }
 
 YOUTUBE SCRAPERS:
-- youtube-videos: { "channel_id": string, "filter": string, "cursor": string }
-- youtube-comments: { "video_id": string, "limit": number, "cursor": string }
 - youtube-channel: { "url": string }
-
+- youtube-search: { "query": string }
 Return the response in this JSON format:
 
 {
@@ -174,4 +163,4 @@ export async function askAI(prompt:string, apiKey:string="pplx-87aee1c87c42dfcda
 
 
 
-// askAI("Give 10 leads interested in sleep", "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").then(console.debug).catch(console.error);
+askAI("Find people who follow brand @nike on Instagram", "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").then(console.debug).catch(console.error);
