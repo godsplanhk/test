@@ -14,13 +14,14 @@ export const getCompanyDetails = async (req: Request, res: Response) => {
 
 
   const options = {
-    method: "GET",
-    url: "https://mtn-linkedin-scraperx-api.p.rapidapi.com/api/sales-nav/search-company-profile",
-    params: { company: name as string },
+    method: 'POST',
+    url: 'https://mtn-linkedin-scraperx-api.p.rapidapi.com/api/sales-nav/search-company-profile',
     headers: {
-      "x-rapidapi-key": API_KEYS.MTN_LINKEDIN_API_KEY,
-      "x-rapidapi-host": "mtn-linkedin-scraperx-api.p.rapidapi.com",
+      'x-rapidapi-key': API_KEYS.MTN_LINKEDIN_API_KEY,
+      'x-rapidapi-host': 'mtn-linkedin-scraperx-api.p.rapidapi.com',
+      'Content-Type': 'application/json'
     },
+    data: {company: name}
   };
 
   try {

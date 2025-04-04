@@ -73,98 +73,94 @@ export async function askAI(prompt:string, apiKey:string){
                 model: "sonar",
                 messages: [
                     { role: "system", content: `
-                            You are a strict data extraction assistant.
+Overview:
+User input (natural language) → AI interprets intent → RAG matches sources → System builds scraper execution plan
 
-Your only job is to read the user's natural language input and return a valid JSON array describing the intent and its parameters.
+Step 1: Build a Data Source Knowledge Base
+Create a structured list of all supported data sources with their capabilities and strengths.
 
-❗ You must never generate content, examples, personas, insights, or explanations. Only extract and return JSON based on exactly what the user said. No guessing or expanding.
+Example:
+{
+"crunchbase": {
+"can_fetch": ["funding stage", "industry", "company location"],
+"best_for": ["startup", "recently funded", "series A", "valuation"]
+},
+"linkedin_jobs": {
+"can_fetch": ["hiring role", "job title", "company"],
+"best_for": ["hiring", "team expanding", "open positions"]
+},
+"instagram": {
+"can_fetch": ["followers", "engagement", "follows"],
+"best_for": ["influencer", "social behavior", "engaged users"]
+}
+}
 
--------------------------------------
-✅ JSON STRUCTURE
+Step 2: Parse the Natural Language Prompt
+Use a prompt-based LLM (e.g., GPT) to convert user input into structured fields.
 
+Prompt Template:
+"You're a lead generation AI.
+User input: 'Find recently funded SaaS companies in the US hiring marketers.'
+Step 1: Identify the task
+Step 2: Extract filters (industry, funding, hiring, location)
+Step 3: Suggest matching sources from the knowledge base
+Step 4: Output structured JSON"
+
+Expected Output:
+{
+"intent": "find_company",
+"filters": {
+"industry": "SaaS",
+"funding": "recent",
+"location": "USA",
+"hiring_role": "marketing"
+}
+}
+
+Step 3: Match Data Sources (RAG or Rules)
+Use keyword mapping or vector retrieval to connect filters to source capabilities.
+
+Example Output:
+{
+"data_sources": ["crunchbase", "linkedin_jobs"],
+"reasoning": {
+"crunchbase": "Provides funding and industry data",
+"linkedin_jobs": "Detects hiring activity"
+}
+}
+
+Step 4: Generate Scraper Execution Instructions
+Translate the matched data sources and filters into structured scraper tasks.
+
+Final Instruction:
 [
-  {
-    "type": "SOCIAL MEDIA" | "JOB PLATFORM" | "DATABASE" | "ENRICH PERSONAL DATA" | "ENRICH COMPANY DATA",
-    "platform": "INSTAGRAM" | "FACEBOOK" | "TIKTOK" | "TWITTER" | "YOUTUBE",  // required ONLY for SOCIAL MEDIA
-    "intent": string, // required for SOCIAL MEDIA and DATABASE
-    "parameters": {
-      "filters": {
-        // keys vary by type (see below)
-      }
-    }
-  }
+{
+"source": "crunchbase",
+"query": {
+"industry": "SaaS",
+"location": "USA",
+"funding": "recent"
+}
+},
+{
+"source": "linkedin_jobs",
+"query": {
+"role": "Marketing",
+"company_type": "SaaS",
+"location": "USA"
+}
+}
 ]
 
--------------------------------------
-📱 SOCIAL MEDIA
+Summary:
 
-- Required: type = "SOCIAL MEDIA"
-- Required: platform from: INSTAGRAM, FACEBOOK, TIKTOK, TWITTER, YOUTUBE
-- Required: intent must be one of:
+Use a small, curated knowledge base for fast lookup or retrieval
 
-  - **INSTAGRAM**: HASHTAG, POSTS, POST, LIKES, COMMENTS, PROFILE, FOLLOWERS, FOLLOWING  
-  - **FACEBOOK**: GROUP, PAGE, SEARCH POSTS, POST, POSTS, LIKES, COMMENTS, PROFILE, FOLLOWER, FOLLOWING  
-  - **TIKTOK**: PROFILE, FOLLOWER, FOLLOWING, HASHTAG, EMAIL, VIDEO, VIDEOS, COMMENTS  
-  - **TWITTER**: PROFILE, FOLLOWER, FOLLOWING, TWEET, RETWEETS, COMMENTS  
-  - **YOUTUBE**: CHANNEL, EMAIL, VIDEO, VIDEOS, COMMENTS, SEARCH
+Parse user input with structured prompting and example-guided formatting
 
-Allowed filters for SOCIAL MEDIA:
-- username
-- hashtag
-- query
-- url
-- count
-- start_date (YYYY-MM-DD)
-- end_date (YYYY-MM-DD)
+Match to sources using rules or vector search (RAG)
 
--------------------------------------
-💼 JOB PLATFORM
-
-- Required: type = "JOB PLATFORM"
-
-Allowed filters:
-- searchTerm
-- location
-- resultsWanted
-- distance
-- jobType
-- isRemote
-- hoursOld
-- platform
-
-Do not include intent or platform fields outside filters.
-
--------------------------------------
-📊 DATABASE
-
-- Required: type = "DATABASE"
-- Required: intent = "COMPANY" or "PEOPLE"
-
-Allowed filters for COMPANY:
-- company_name
-- company_num_employees
-- company_locations
-- zip_code
-- search_radius
-- url
-
-Allowed filters for PEOPLE:
-- person_name
-- person_title
-- person_past_title
-- person_locations
-
--------------------------------------
-📌 RULES
-
-- ❌ Do not write paragraphs, descriptions, examples, or hypothetical users.
-- ✅ Only return a valid JSON array of objects as described above.
-- ❌ Do not infer or assume values not explicitly mentioned.
-- ✅ Only include fields and values that are directly stated by the user.
-- ✅ If the prompt is vague, extract only what is clearly present and leave out anything else.
-- ❌ Never generate made-up data or suggestions.
-
-Now read the user's input and return a valid JSON response only.
+Generate execution plans that the backend can directly run
 
 
 
@@ -176,7 +172,7 @@ Now read the user's input and return a valid JSON response only.
 
         const response = await fetch('https://api.perplexity.ai/chat/completions', options);
         const data = await response.json();
-        return JSON.parse(data.choices[0].message.content.replace(/```json|```/g, '').trim())
+        return data.choices[0].message.content.replace(/```json|```/g, '').trim()
     } catch (error) {
         console.error("Error fetching company data:", error);
         return undefined;

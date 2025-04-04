@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { x_profile_info, x_followers, x_following } from "../../controllers/social/x.com/profile.controller";
 import { x_comments_api, x_tweet, x_retweets } from "../../controllers/social/x.com/tweets.controller";
-import { x_users_by_id, x_hashtags } from "../../controllers/social/x.com/x.controller";
+import { x_users_by_id, x_hashtags, x_account_search } from "../../controllers/social/x.com/x.controller";
 
 const XRouter = Router()
 
@@ -14,6 +14,7 @@ XRouter.post("/comments", x_comments_api)
 XRouter.post("/tweet", x_tweet)
 XRouter.post("/hashtag", x_hashtags)
 XRouter.post("/retweets", x_retweets)
+XRouter.post("/account_search", x_account_search)
 // XRouter.post("/search", yt_search_scraper)
 // XRouter.post("/email", yt_email_finder)
 

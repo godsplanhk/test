@@ -15,7 +15,7 @@ export const searchCompaniesSalesNavigator = async (req: Request, res: Response)
         method: 'POST',
         url: 'https://mtn-linkedin-scraperx-api.p.rapidapi.com/api/sales-nav/search-company-result',
         headers: {
-            'x-rapidapi-key': API_KEYS.LINKEDIN_API_KEY,
+            'x-rapidapi-key': API_KEYS.MTN_LINKEDIN_API_KEY,
             'x-rapidapi-host': 'mtn-linkedin-scraperx-api.p.rapidapi.com',
             'Content-Type': 'application/json'
         },
