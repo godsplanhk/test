@@ -21,6 +21,7 @@ import DatabaseRouter from "./routes/db/social.logs.routes";
 import authMiddleware from "./middleware/auth.middleware";
 import JobSearch from "./routes/job/jobsearch.routes";
 import OtherRouter from "./routes/other.routes";
+import EnrichmentLogsRouter from "./routes/db/enrichment.logs.routes";
 
 dotenv.config();
 
@@ -64,7 +65,9 @@ dotenv.config();
   // Enrichment, Maps, and DB
   app.use("/enrichment", authMiddleware, EnrichmentRouter);
   app.use("/maps", authMiddleware, MapsRouter);
+  
   app.use("/db", authMiddleware, DatabaseRouter);
+  app.use("/db/enrichment", authMiddleware, EnrichmentLogsRouter);
 
   // Influencer API
   app.post("/influencerSearch", authMiddleware, searchInfluencers);
