@@ -3,14 +3,14 @@ import { askAI } from "../../utils/responses.ai";
 
 export async function ASK_AI(req:Request, res:Response){
     try{
-        const {prompt} = req.body
+        const {prompt,scenario} = req.body
         
         if(!prompt || !process.env.PERPLEXITY_API_KEY){
             res.status(400).json({error:"Prompt is required"})
             return
         }
 
-        const response = await askAI(prompt, process.env.PERPLEXITY_API_KEY)
+        const response = await askAI(prompt, scenario, process.env.PERPLEXITY_API_KEY)
 
         res.status(200).json({
             data:response
