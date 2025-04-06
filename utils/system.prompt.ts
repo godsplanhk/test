@@ -12,14 +12,12 @@ export const socialMediaAssistantPrompt =`You are an advanced social media scrap
 
 Valid scraper types and their required body parameters:
 INSTAGRAM SCRAPERS:
-- instagram-post: { "url": string }
 - instagram-profile: { "url": string }
+- instagram-followers: { "id": string, "limit": number }
 - instagram-hashtags: { "hashtag": string, "limit": number }
 
 FACEBOOK SCRAPERS:
 - facebook-profile: { "url": string }
-- facebook-comments: { "url": string, "limit": number }
-- facebook-group: { "url": string }
 - facebook-followers: { "url": string, "limit": number, "type": string }
 - facebook-search: { "query": string }
 
@@ -63,10 +61,13 @@ Rules:
 - Step 1: Identify relevant profile, URL, or hashtag entry
 - Step 2: Collect users via comments, likes, or followers
 - Always include at least one primary scraper with relevance_score = 1.0
-- Add 2-4 supporting scrapers with decreasing relevance
+- Add 2-3 supporting scrapers with decreasing relevance
 - Replace missing fields with "prompt", and add to user_prompts
 - If count is missing, default to 10
 - for hashtags, donot add # as prefix and only return 1 hashtag
+- don't send duplicate scrapers
+- if any platform is given in the user's input, don't return any other platform's scraper.
+
 - there is no platform like twitter, so don't return any twitter scrapper.
 
 Examples of user queries:
