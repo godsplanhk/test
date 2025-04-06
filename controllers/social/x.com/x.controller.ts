@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Request, Response } from "express";
 import { API_KEYS } from '../../../utils/apiKeys';
-import { extractUserListDataX } from '../../../utils/helpers';
+import { extractMediaUserPairsX, extractUserListDataX } from '../../../utils/helpers';
 
 export const x_users_by_id = async (req: Request, res: Response) => {
     const { userIds } = req.body; // Get Twitter user IDs from request body
@@ -109,8 +109,8 @@ export const x_account_search = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.request(options);
-        console.log(response.data)
-        res.status(200).json({data:response.data.users_list, cursor:response.data.cursor});
+        const result = extractMediaUserPairsX(response.data);
+        res.status(200).json({data:result, cursor:response.data.cursor});
         return;
     } catch (error: any) {
         console.error("Error fetching Twitter community search results:", error);

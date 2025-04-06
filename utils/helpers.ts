@@ -237,3 +237,79 @@ export function extractUserListDataX(data: any): UserListResponse {
     reels_max_id
   };
 }
+
+interface Media {
+  display_url: string;
+  id_str: string;
+  media_key: string;
+  media_url_https: string;
+  type: string;
+  url: string;
+}
+
+interface User {
+  // You can further define this based on your need
+  [key: string]: any;
+}
+
+interface TweetEntry {
+  media: Media[];
+  user: User;
+}
+
+export function extractMediaUserPairsX(data: any): TweetEntry[] {
+  const output: TweetEntry[] = [];
+
+  const instructions = data?.result?.timeline?.instructions || [];
+  for (const instruction of instructions) {
+    const entries = instruction.entries || [];
+    for (const entry of entries) {
+      const tweetResult = entry?.content?.itemContent?.tweet_results?.result;
+      const user = tweetResult?.core?.user_results?.result;
+      const mediaArray = tweetResult?.legacy?.extended_entities?.media;
+
+      if (mediaArray && user) {
+        const filteredMedia = mediaArray.map((media: any) => ({
+          display_url: media.display_url,
+          id_str: media.id_str,
+          media_key: media.media_key,
+          media_url_https: media.media_url_https,
+          type: media.type,
+          url: media.url,
+        }));
+
+        output.push({ media: filteredMedia, user });
+      }
+    }
+  }
+
+  return output;
+}
+
+type MediaUserEntry = {
+  media: {
+    id: string;
+    like_count: number;
+    comment_count: number;
+    taken_at: string;
+  };
+  user: {
+    username: string;
+    full_name: string;
+    profile_pic_url: string;
+  };
+};
+
+export function extractFacebookSearchResults(data: any) {
+  const res:any = data.media_grid.sections[0].layout_content
+  const finalMedia: any[] =[]
+  const oneByTwo = res["one_by_two_item"]["clips"]["items"]
+  oneByTwo.forEach((item:any) => {
+    finalMedia.push({media:item["media"], user:item["user"]})
+  })
+  res["fill_items"].forEach((item:any) => {
+    finalMedia.push({media:item["media"], user:item["user"]})
+  })
+
+  return finalMedia
+}

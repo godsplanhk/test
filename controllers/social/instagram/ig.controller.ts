@@ -116,7 +116,7 @@ export async function ig_id_generator(req: Request, res: Response) {
   }
   
   export async function ig_search(req: Request, res: Response) {
-    const { query, page_token } = req.body;
+    const { query, page_token, count } = req.body;
     
   
     if (!API_KEYS.INSTAGRAM_API_KEY || !query) {
@@ -137,9 +137,15 @@ export async function ig_id_generator(req: Request, res: Response) {
       res.status(404).json({ error: 'Search not found.' });
         return 
       }
-      const data = extractFullUserData(response.data)
+      const result = extractFullUserData(response.data)
       // Send the hashtag data as the response
-      res.status(200).json({ data:data });
+      res.status(200).json({ data:{
+        users:!count?result.users:result.users.slice(0, count),
+        rank_token:response.data.rank_token,
+        next_max_id:response.data.next_max_id,
+        reels_max_id:response.data.reels_max_id,
+
+      } });
     } catch (error) {
       // Handle errors
       if (axios.isAxiosError(error)) {
