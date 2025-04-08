@@ -22,7 +22,7 @@ import JobSearch from "./routes/job/jobsearch.routes";
 import OtherRouter from "./routes/other.routes";
 import EnrichmentLogsRouter from "./routes/db/enrichment.logs.routes";
 import CreditRouter from "./routes/db/credits.routes";
-
+import StripeRouter from "./routes/stripe.routes";
 dotenv.config();
 
   const app = express();
@@ -74,6 +74,7 @@ dotenv.config();
   
   app.use("/ai", OtherRouter)
   app.use("/credits", CreditRouter)
+  app.use("/payments", StripeRouter)
 
   const PORT = process.env.PORT || 5300;
   app.listen(PORT);
