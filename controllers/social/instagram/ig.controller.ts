@@ -144,7 +144,6 @@ export async function ig_id_generator(req: Request, res: Response) {
         rank_token:response.data.rank_token,
         next_max_id:response.data.next_max_id,
         reels_max_id:response.data.reels_max_id,
-
       } });
     } catch (error) {
       // Handle errors
