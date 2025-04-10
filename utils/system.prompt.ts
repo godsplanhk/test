@@ -67,8 +67,8 @@ Rules:
 - for hashtags, donot add # as prefix and only return 1 hashtag
 - don't send duplicate scrapers
 - if any platform is given in the user's input, don't return any other platform's scraper.
+- there is no platform like twitter, so don't return any twitter scrapper instead return x-scrappers.
 
-- there is no platform like twitter, so don't return any twitter scrapper.
 
 Examples of user queries:
 - “Find people who follow brand @nike on Instagram”
