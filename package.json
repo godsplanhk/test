@@ -25,6 +25,7 @@
     "@types/compression": "^1.7.5",
     "@types/jsdom": "^21.1.7",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/lodash": "^4.17.16",
     "@types/morgan": "^1.9.9",
     "apify-client": "^2.12.0",
     "axios": "^1.7.9",
@@ -38,8 +39,10 @@
     "groq-sdk": "^0.15.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "pg": "^8.13.3",
+    "stripe": "^18.0.0",
     "uuid": "^11.1.0"
   }
 }

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Request, Response } from "express";
 import { API_KEYS } from '../../../utils/apiKeys';
+import { extractMediaUserPairsX, extractUserListDataX } from '../../../utils/helpers';
 
 export const x_users_by_id = async (req: Request, res: Response) => {
     const { userIds } = req.body; // Get Twitter user IDs from request body
@@ -76,3 +77,46 @@ export const x_hashtags = async (req: Request, res: Response) => {
         return;
     }
 };
+
+export const x_account_search = async (req: Request, res: Response) => {
+    const { query, count='10', cursor } = req.body;
+    
+
+    if (!query) {
+        res.status(400).json({ error: "Please provide a search query" });
+        return;
+    }
+
+    if (!API_KEYS.TWITTER_API_KEY) {
+        res.status(400).json({ error: "Please provide an API key" });
+        return;
+    }
+
+    const options = {
+        method: 'GET',
+        url: 'https://twitter241.p.rapidapi.com/search-v2',
+        params: {
+          type: 'Top',
+          count,
+          query,
+          cursor:cursor
+        },
+        headers: {
+          'x-rapidapi-key': API_KEYS.TWITTER_API_KEY,
+          'x-rapidapi-host': 'twitter241.p.rapidapi.com'
+        }
+      };
+
+    try {
+        const response = await axios.request(options);
+        const result = extractMediaUserPairsX(response.data);
+        res.status(200).json({data:result, cursor:response.data.cursor});
+        return;
+    } catch (error: any) {
+        console.error("Error fetching Twitter community search results:", error);
+        res.status(error?.response?.status || 500).json({ error: error.message });
+        return;
+    }
+};
+
+

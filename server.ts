@@ -1,4 +1,3 @@
-import cluster from "node:cluster";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -21,20 +20,22 @@ import DatabaseRouter from "./routes/db/social.logs.routes";
 import authMiddleware from "./middleware/auth.middleware";
 import JobSearch from "./routes/job/jobsearch.routes";
 import OtherRouter from "./routes/other.routes";
-
+import EnrichmentLogsRouter from "./routes/db/enrichment.logs.routes";
+import CreditRouter from "./routes/db/credits.routes";
+import StripeRouter from "./routes/stripe.routes";
 dotenv.config();
 
   const app = express();
-  app.set('trust proxy', 1); // 1 means trusting the first proxy, if using multiple proxies, you can adjust accordingly.
+  app.set('trust proxy', 1);
 
 
   // Middlewares
   const corsOptions ={
     origin:"*",
-    credentials:true,            //access-control-allow-credentials:true
+    credentials:true,            
     optionSuccessStatus:200
   }
-  app.options('*', cors()) // include before other routes
+  app.options('*', cors())
   app.use(cors(corsOptions));
 
   app.use(helmet());
@@ -64,12 +65,16 @@ dotenv.config();
   // Enrichment, Maps, and DB
   app.use("/enrichment", authMiddleware, EnrichmentRouter);
   app.use("/maps", authMiddleware, MapsRouter);
+  
   app.use("/db", authMiddleware, DatabaseRouter);
+  app.use("/db/enrichment", authMiddleware, EnrichmentLogsRouter);
 
   // Influencer API
   app.post("/influencerSearch", authMiddleware, searchInfluencers);
   
   app.use("/ai", OtherRouter)
+  app.use("/credits", CreditRouter)
+  app.use("/payments", StripeRouter)
 
   const PORT = process.env.PORT || 5300;
   app.listen(PORT);

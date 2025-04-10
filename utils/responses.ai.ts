@@ -92,7 +92,7 @@ export async function askAI(prompt: string, scenario: string, apiKey: string = "
 
         const response = await fetch('https://api.perplexity.ai/chat/completions', options);
         const data = await response.json();
-        return JSON.parse(data.choices[0].message.content.replace(/```json|```/g, '').trim())
+        return data.choices[0].message.content.replace(/```json|```/g, '').trim()
     } catch (error) {
         console.error("Error fetching company data:", error);
         return undefined;
