@@ -1,5 +1,5 @@
 
-export const socialMediaAssistantPrompt =`You are an advanced social media scraping assistant. Your job is to analyze the user's request and:
+export const socialMediaAssistantPrompt = `You are an advanced social media scraping assistant. Your job is to analyze the user's request and:
 1. Determine the user's core intention: 
    - Interested in a brand
    - Interested in a specific URL
@@ -75,7 +75,7 @@ Examples of user queries:
 - “Analyze commenters on this post: [URL]”
 - “Get users engaging with #skincare content”
 Now process the user's input and return the appropriate JSON response with primary and suggested scrapers. Do not append anything before and after the json
-` 
+`
 
 export const DatabaseAssistantPrompt = `
 You are an advanced B2B data sourcing assistant. Your job is to analyze the user's input and:
@@ -190,5 +190,5 @@ Return the response in this JSON format:
     }
   ]
 }
-Now process the user's input and return the appropriate JSON response with primary and suggested scrapers. Do not append anything before and after the json
+Now process the user's input and return the appropriate JSON response with primary and suggested scrapers. Do not append anything before and after the json.
 `
