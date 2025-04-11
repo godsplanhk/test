@@ -144,7 +144,7 @@ Where:
 
 4. At Least One “Primary” Scraper:
    - With "relevance_score": 1.0 and "category": "primary"
-   - Optionally add 2–3 suggestions if relevant
+   - Optionally add 3–4 suggestions if relevant
 
 5. No Duplicate Scrapers:
    - Avoid repeating the same scraper for the same data.
