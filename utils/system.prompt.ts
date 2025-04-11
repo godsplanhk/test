@@ -62,7 +62,7 @@ Where:
 3. instagram-hashtags
    Body: {"hashtag": string, "limit": number}
    Use this if:
-   - The user references an Instagram hashtag (e.g., “#skincare on Instagram”)
+   - The user references an Instagram hashtag (e.g., “skincare on Instagram”)
    - also if no other scraper of instagram matches
    - Remove the “#” prefix in "hashtag"
 
@@ -134,7 +134,6 @@ Where:
    - If “Facebook,” only Facebook scrapers, etc.
    - If the user doesn't specify, pick the scrappers from different platform based on the intent.
    - Don't hallucinate with scrapper which is not mentioned here.
-
 2. Limit/Count Defaults:
    - Default to 10 or "prompt" if not specified.
 
@@ -152,7 +151,9 @@ Where:
 6. Missing Data:
    - Set it to "prompt".
 
-7. return only the JSON:
+7. If the users is not specific to what they wants include hashtags scrapper of different platforms.
+
+8. return only the JSON:
    - No text before or after.
 
 
