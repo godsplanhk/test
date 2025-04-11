@@ -50,7 +50,7 @@ export const facebook_follow_scraper = async (req: Request, res: Response) => {
     const input = {
         "startUrls": [{ "url": url }],
         "resultsLimit": limit || 5,
-        "followType": type
+        "followType": type || "follower"
     };
 
     try {

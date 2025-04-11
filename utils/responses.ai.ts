@@ -103,4 +103,4 @@ export async function askAI(prompt: string, scenario: string, apiKey: string = "
 
 
 
-askAI("Find information about Tesla company", "database", "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").then(console.debug).catch(console.error);
+askAI("10 leads for my electrical shops", "social", "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").then(console.debug).catch(console.error);
