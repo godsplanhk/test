@@ -46,20 +46,14 @@ Where:
 ## Valid Scraper Types & “Use This If” Conditions
 
 ### INSTAGRAM
-1. instagram-profile
-   Body: {"url": string}
-   Use this if:
-   - The user references a specific Instagram profile URL (e.g., “instagram.com/brandA”)
-   - They want overall profile details, not the followers specifically.
-
-2. instagram-followers
+1. instagram-followers
    Body: {"id": string, "limit": number}
    Use this if:
    - The user wants the followers of an Instagram account
    - The user specifically mentions “followers on Instagram”
    - If the account “id” is not provided, set "id": "prompt"
 
-3. instagram-hashtags
+2. instagram-hashtags
    Body: {"hashtag": string, "limit": number}
    Use this if:
    - The user references an Instagram hashtag (e.g., “skincare on Instagram”)
@@ -67,17 +61,12 @@ Where:
    - Remove the “#” prefix in "hashtag"
 
 ### FACEBOOK
-1. facebook-profile
-   Body: {"url": string}
-   Use this if:
-   - The user references a Facebook page or profile URL
-
-2. facebook-followers
+1. facebook-followers
    Body: {"url": string, "limit": number }
    Use this if:
    - The user wants followers or likers of a specific Facebook page- profile
 
-3. facebook-search
+2. facebook-search
    Body: {"query": string}
    Use this if:
    - The user wants to search Facebook by a keyword/phrase
@@ -98,19 +87,9 @@ Where:
    - Remove the “#” from "query"
    - only return one hashtags with no space in them
 
-3. x-profile
-   Body: {"username": string}
-   Use this if:
-   - The user references a specific X.com profile but only wants profile-level info
-
 ### TIKTOK
-1. tiktok-profile
-   Body: {"username": string}
-   Use this if:
-   - The user references a TikTok user handle (“@brandA on TikTok”)
-
-2. tiktok-hashtag
-   Body: {"hashtag": string, "count": string, "cursor": string}
+1. tiktok-hashtag
+   Body: {"hashtag": string, "count": string }
    Use this if:
    - The user wants data from a TikTok hashtag (#dance on TikTok)
    - If count/cursor are not provided, set them to "prompt" or a default
@@ -122,7 +101,7 @@ Where:
    - The user references a YouTube channel link
 
 2. youtube-search
-   Body: {"query": string}
+   Body: {"query": string,"limit": number }
    Use this if:
    - The user wants to search YouTube by keyword/phrase
 
