@@ -13,7 +13,7 @@ export async function ASK_AI(req:Request, res:Response){
         const response = await askAI(prompt, scenario, process.env.PERPLEXITY_API_KEY)
 
         res.status(200).json({
-            data:response
+            data:{...response,scenario}
         })
     }
     catch{
