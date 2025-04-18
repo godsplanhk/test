@@ -153,7 +153,8 @@ export const DatabaseAssistantPrompt =`You are a world-class assistant for trans
       zip_code:string,
       search_radius:number,
       keyword_tags:string,
-      industry_tags:string
+      industry_tags:string,
+      limit:number
       }
     }
     // ...additional scrapers suggestions
@@ -164,7 +165,7 @@ export const DatabaseAssistantPrompt =`You are a world-class assistant for trans
     "construction" ,
     "marketing & advertising" ,
     "real estate" ,
-    "health5567cddb7369644d250c0000" ,
+    "health" ,
     "management consulting" ,
     "computer software" ,
     "internet" ,
@@ -183,7 +184,7 @@ export const DatabaseAssistantPrompt =`You are a world-class assistant for trans
     "nonprofit organization management" ,
     "entertainment" ,
     "electrical/electronic manufacturing" ,
-    "leisure5567cdd87369643bc12f0000" ,
+    "leisure" ,
     "professional training & coaching" ,
     "transportation/trucking/railroad" ,
     "law practice" ,
@@ -284,7 +285,7 @@ export const DatabaseAssistantPrompt =`You are a world-class assistant for trans
     "government relations" ,
     "fund-raising" ,
     "think tanks" ,
-    "glass5567cd4f736964397e030000" ,
+    "glass" ,
     "capital markets" ,
     "semiconductors" ,
     "animation" ,
@@ -313,6 +314,7 @@ export const DatabaseAssistantPrompt =`You are a world-class assistant for trans
 - Infer filters: company name→q_organization_name; employee size→organization_num_employees_ranges; locations→organization_locations or zip_code+organization_location_radius; industry tags→organization_industry_tag_ids; keywords→q_organization_keyword_tags; IDs→organization_ids; page defaults to 1.
 - Populate each field in 'body' with inferred values or '""'; use '1' for 'page' and '"prompt"' for unspecified radii or ranges.
 - Combine multiple values with commas (no spaces).
+- choose multiple industry tags as much as possible and is relevant to user requirements
 - **Primary scraper**: assign 'relevance_score = 1.0' and 'category = "primary"'.
 - **Suggestion scrapers**: include up to three additional 'apollo-company' scrapers with 'category = "suggestion"' and relevance scores 0.3–0.8 for other relevant filters not explicitly requested.
 - For “near me” cues: 'zip_code = "prompt"' and 'organization_location_radius = "prompt"'.
