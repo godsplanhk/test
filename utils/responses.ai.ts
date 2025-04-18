@@ -92,6 +92,7 @@ export async function askAI(prompt: string, scenario: string, apiKey: string = "
         };
 
         const response = await fetch('https://api.perplexity.ai/chat/completions', options);
+        console.log(response);
         const data = await response.json();
         console.log(data.choices[0].message.content)
         return JSON.parse(data.choices[0].message.content.replace(/```json|```/g, '').trim());
