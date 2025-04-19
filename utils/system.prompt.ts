@@ -328,7 +328,6 @@ return only the JSON:
 `
 
 export const JobSearchAssistantPrompt = `You are a world-class assistant for translating free-form job search requirements into structured job-search API filter scrapers. Analyze the user's request and generate _only_ a JSON object matching this schema:
-
 {
   "selected_scrapers": [
     {
@@ -337,15 +336,13 @@ export const JobSearchAssistantPrompt = `You are a world-class assistant for tra
       "reason": "<brief justification>",       // human-readable rationale
       "category": "primary" | "suggestion",    // "primary": essential, "suggestion": optional
       "body": {
-        search_term: string,
+        jobTitle: string,
         location: string,
         results_wanted: number,
-        site_name:{linkedin:boolean,indeed:boolean,glassdoor:boolean} 
-        distance: number,
-        job_type: string,
-        is_remote: boolean,
-        linkedin_fetch_description: boolean,
-        hours_old: number
+        platforms:{linkedin:boolean,indeed:boolean,glassdoor:boolean} 
+        search_radius: number,
+        jobType: string,
+        hoursOld: number
       }
     }
     // ...additional scraper suggestions
