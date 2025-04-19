@@ -1,4 +1,4 @@
-import { DatabaseAssistantPrompt, socialMediaAssistantPrompt } from "./system.prompt";
+import { DatabaseAssistantPrompt, JobSearchAssistantPrompt, socialMediaAssistantPrompt } from "./system.prompt";
 
 /**
  * Fetches enriched company data using Perplexity AI API based on a specific question.
@@ -73,6 +73,9 @@ export async function askAI(prompt: string, scenario: string, apiKey: string = "
             break;
         case "social":
             systemPrompt = socialMediaAssistantPrompt;
+            break;
+        case "job":
+            systemPrompt = JobSearchAssistantPrompt;
             break;
         default:
             systemPrompt = socialMediaAssistantPrompt;
